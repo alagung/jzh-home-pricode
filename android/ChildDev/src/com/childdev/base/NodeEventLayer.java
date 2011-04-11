@@ -17,6 +17,18 @@ import org.cocos2d.utils.pool.OneClassPool;
 import android.view.MotionEvent;
 
 public abstract class NodeEventLayer extends CCLayer {
+	protected ChildDevBaseTest _test = null;
+	
+	public NodeEventLayer(ChildDevBaseTest test) {
+		super();
+		_test = test;
+		isTouchEnabled_ = true;
+	}
+	
+	public ChildDevBaseTest getTest()
+	{
+		return _test;
+	}
 
 	/**
 	 * Determine whether a UIKit coordinate is in Node. Will convert to GL coordinate first
@@ -54,19 +66,6 @@ public abstract class NodeEventLayer extends CCLayer {
 		}
 	}
 
-	public NodeEventLayer() {
-		super();
-		isTouchEnabled_ = true;
-	}
-
-	public abstract boolean ccTouchesMovedPro(MotionEvent event, CCNode item);
-
-	public abstract boolean ccTouchesCancelledPro(MotionEvent event, CCNode item);
-
-	public abstract boolean ccTouchesEndedPro(MotionEvent event, CCNode item);
-
-	public abstract boolean ccTouchesBeganPro(MotionEvent event, CCNode item);
-	
 	private boolean itemEventImpl(MotionEvent event, CCNode item) {
 		int action = event.getAction();
 		int actionCode = action & MotionEvent.ACTION_MASK;
@@ -160,6 +159,22 @@ public abstract class NodeEventLayer extends CCLayer {
 	@Override
 	final public boolean ccTouchesMoved(MotionEvent event) {
 		return itemEvent(event, this);
+	}
+
+	public boolean ccTouchesBeganPro(MotionEvent event, CCNode item) {
+		return CCTouchDispatcher.kEventIgnored;
+	}
+
+	public boolean ccTouchesEndedPro(MotionEvent event, CCNode item) {
+		return CCTouchDispatcher.kEventIgnored;
+	}
+
+	public boolean ccTouchesCancelledPro(MotionEvent event, CCNode item) {
+		return CCTouchDispatcher.kEventIgnored;
+	}
+
+	public boolean ccTouchesMovedPro(MotionEvent event, CCNode item) {
+		return CCTouchDispatcher.kEventIgnored;
 	}
 
 }
