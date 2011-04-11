@@ -1,18 +1,15 @@
 package com.childdev;
 
-import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.nodes.CCSpriteFrameCache;
 import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.opengl.CCGLSurfaceView;
-import org.cocos2d.types.CGPoint;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
 import android.view.WindowManager;
-
-import com.childdev.airsearch.AirsearchLayer;
 
 public class ChildDevMain extends Activity{
     // private static final String LOG_TAG = SpritesTest.class.getSimpleName();
@@ -76,11 +73,6 @@ public class ChildDevMain extends Activity{
 
         CCDirector.sharedDirector().end();
         CCTextureCache.sharedTextureCache().removeAllTextures();
-    }
-    
-    public CCScene onLoadScene() 
-    {
-        CCScene scene = CCScene.node();
-        return scene;
+        CCSpriteFrameCache.sharedSpriteFrameCache().removeAllSpriteFrames();
     }
 }

@@ -13,6 +13,7 @@ import org.cocos2d.types.CGPoint;
 import org.cocos2d.utils.CCFormatter;
 
 import com.childdev.ChildDevMain;
+import com.childdev.base.ChildDevBaseTest;
 import com.childdev.base.NodeEventSprite;
 
 import android.os.Handler;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 
 public class PlaneSprite extends NodeEventSprite{
 
+	private ChildDevBaseTest _test = null;
 	private float x;
 	private float y;
 	private float xt;
@@ -32,14 +34,16 @@ public class PlaneSprite extends NodeEventSprite{
 	
 	@Override
 	public boolean ccTouchesBegan(MotionEvent event) {
-		Log.i("Plane", "Plane got");
-		ChildDevMain act = (ChildDevMain)CCDirector.sharedDirector().getActivity();
-		act.getHandler().post(new Runnable() {			
+		_test.getBundle().postToUI(new Runnable() {			
 			@Override
 			public void run() {
 				Toast.makeText(CCDirector.sharedDirector().getActivity(), "选中了飞机 "+name, 30).show();
 			}
 		});
+		_test.score += 1;
+		stopAllActions();
+		removeAllChildren(true);
+		getParent().removeChild(this, true);
 		return true;
 	}
 
@@ -47,7 +51,7 @@ public class PlaneSprite extends NodeEventSprite{
 	public void onEnter() {
 		super.onEnter();
 		setPosition(CGPoint.make(x, y));
-		CCIntervalAction act = CCMoveBy.action(30, CGPoint.make(xt, yt));
+		CCIntervalAction act = CCMoveBy.action(20, CGPoint.make(xt, yt));
 		runAction(CCRepeatForever.action(CCSequence.actions(act, act.reverse())));
 		
         CCAnimation animation = CCAnimation.animation("dance", 0.2f);
@@ -58,13 +62,14 @@ public class PlaneSprite extends NodeEventSprite{
         runAction(CCRepeatForever.action(CCAnimate.action(animation)));
 	}
 
-	public PlaneSprite(String filename, float x, float y, float xt, float yt, String name) {
+	public PlaneSprite(ChildDevBaseTest test, String filename, float x, float y, float xt, float yt, String name) {
 		super(filename);
 		this.x = x;
 		this.y = y;
 		this.xt = xt;
 		this.yt = yt;	
 		this.name = name;
+		this._test = test;
 	}
 
 	@Override
