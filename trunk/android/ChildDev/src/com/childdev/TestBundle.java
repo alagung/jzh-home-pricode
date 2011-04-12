@@ -31,6 +31,7 @@ public class TestBundle {
 		super();
 		_tests = new ChildDevBaseTest[] {
 				new AirsearchTest(this),
+				new AirsearchTest(this),
 		};
 	}
 
@@ -96,4 +97,8 @@ public class TestBundle {
 				.getActivity();
 		return act.getHandler().post(r);
 	}
+	
+	public ChildDevBaseTest[] getTests() {
+		return _tests;
+	}	
 }

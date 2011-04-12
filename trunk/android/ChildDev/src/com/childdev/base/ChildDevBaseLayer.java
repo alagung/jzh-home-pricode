@@ -21,25 +21,25 @@ import org.cocos2d.utils.pool.OneClassPool;
 
 public class ChildDevBaseLayer extends CCLayer implements UpdateCallback {
 	public class SimpleActor {
-		public float sTime;
+		public float startTime;
+		public float endTime;
 		public CCNode node;
-		public float eTime;
 		public CCAction act;
 		public boolean running;
 		public SimpleActor(float sTime, CCNode node, float eTime, CCAction act) {
 			super();
-			this.sTime = sTime;
+			this.startTime = sTime;
+			this.endTime = eTime;
 			this.node = node;
-			this.eTime = eTime;
 			this.act = act;
 			this.running = false;
 		}
 		public SimpleActor(float sTime, CCNode node, CCAction act) {
 			super();
-			this.sTime = sTime;
+			this.startTime = sTime;
 			this.node = node;
 			this.act = act;
-			this.eTime = 0.0f;
+			this.endTime = 0.0f;
 			this.running = false;
 		}
 		
@@ -91,13 +91,13 @@ public class ChildDevBaseLayer extends CCLayer implements UpdateCallback {
 	private void processActs() {
 		for (int i = 0; i < _acts.size(); ++i) {
 			SimpleActor act = _acts.get(i);
-			if (!act.running && act.sTime <= tEl) {
+			if (!act.running && act.startTime <= tEl) {
 				act.running = true;
 				addChild(act.node);
 				if (act.act != null)
 					act.node.runAction(act.act);
 			}
-			if (act.running && (act.eTime > 0.0f && act.eTime <= tEl)) {
+			if (act.running && (act.endTime > 0.0f && act.endTime <= tEl)) {
 				act.node.stopAllActions();
 				removeChild(act.node, true);
 				act.running = false;				
