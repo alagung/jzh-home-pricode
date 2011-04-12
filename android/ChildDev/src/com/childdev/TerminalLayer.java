@@ -1,6 +1,5 @@
 package com.childdev;
 
-import org.cocos2d.layers.CCLayer;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.types.CGPoint;
@@ -9,11 +8,13 @@ import org.cocos2d.types.CGSize;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
-public class TerminalLayer extends CCLayer {
+import com.childdev.base.ChildDevBaseLayer;
+
+public class TerminalLayer extends ChildDevBaseLayer {
 	TestBundle _bundle;
 
 	public TerminalLayer(TestBundle bundle) {
-		super();
+		super(null);
 		isTouchEnabled_ = true;
 		_bundle = bundle;
 
@@ -30,7 +31,7 @@ public class TerminalLayer extends CCLayer {
 			@Override
 			public void run() {
 				Toast.makeText(CCDirector.sharedDirector().getActivity(),
-						"ÍË³ö", 3).show();
+						"ÍË³ö", 1).show();
 				CCDirector.sharedDirector().getActivity().finish();
 			}
 		});
