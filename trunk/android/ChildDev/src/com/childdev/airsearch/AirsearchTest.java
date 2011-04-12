@@ -17,6 +17,7 @@ import org.cocos2d.types.CGSize;
 import android.view.MotionEvent;
 
 import com.childdev.TestBundle;
+import com.childdev.base.ChildDevBaseLayer;
 import com.childdev.base.ChildDevBaseTest;
 
 public class AirsearchTest extends ChildDevBaseTest {
@@ -41,7 +42,7 @@ public class AirsearchTest extends ChildDevBaseTest {
 		CCScene object;
 		
 		object = CCScene.node();
-		object.addChild(new Instruction());
+		object.addChild(new Instruction(this));
 		s.add(object);
 		
 		object = CCScene.node();
@@ -52,47 +53,41 @@ public class AirsearchTest extends ChildDevBaseTest {
 		return s;
 	}
 	
-	private class Instruction extends CCLayer {
-		ArrayList<CCLabel> hints = new ArrayList<CCLabel>(4);
+	private class Instruction extends ChildDevBaseLayer {
 		CCSprite sample = null;
-		private void addHint(String text)
+		float yy = 0;
+		private void addHint( float sTime, String text)
 		{
 			CGSize s = CCDirector.sharedDirector().winSize();
-			float yy = s.height - 60;
-			if (hints.size() > 0) {
-				CCLabel last = hints.get(hints.size()-1);
-				yy = last.getPositionRef().y - last.getContentSizeRef().height - 20;
-			}
+			if (yy == 0)
+				yy = s.height - 60;
+			
 			CCLabel hint = CCLabel.makeLabel(text, "DroidSans", 16);
 			hint.setAnchorPoint(0.5f, 1.0f);
 			hint.setPosition(CGPoint.make(s.width / 2, yy));
 	        hint.setOpacity(0);
-	        addChild(hint);
+	        addSimpleAct(sTime, hint, CCSequence.actions(
+	        		CCFadeIn.action(1), CCFiniteTimeAction.action(3), CCFadeOut.action(2)));
+	        yy = hint.getPositionRef().y - hint.getContentSizeRef().height - 20;
 		}
-		public Instruction() {
-			super();
+		public Instruction(ChildDevBaseTest test) {
+			super(test);
 			isTouchEnabled_ = true;
 			
 			CGSize s = CCDirector.sharedDirector().winSize();
-			addHint("小朋友，天空中有许许多多的飞机，就像这样");
-			addHint("接下来你要做的就是在天空中找出飞机哦！");
-			addHint("先来试一下吧！");
+			addHint(0.0f, "小朋友，天空中有许许多多的飞机，就像这样");
+			addHint(4.0f, "接下来你要做的就是在天空中找出飞机哦！");
+			addHint(4.0f, "先来试一下吧！");
 
 			sample = CCSprite.sprite("grossini.png");
 			sample.setPosition(s.width / 2, s.height / 2);
 			sample.setOpacity(0);
+			addSimpleAct(2.0f, sample, CCFadeIn.action(1.5f));
 		}
 		
 		@Override
 		public void onEnter() {
-			super.onEnter();
-			for (int i = 0; i < hints.size(); ++i) {
-				hints.get(i).runAction(
-						CCSequence.actions(CCFadeIn.action(1),
-								CCFiniteTimeAction.action(4), CCFadeOut
-										.action(2)));
-			}
-			sample.runAction(CCSequence.actions(CCFiniteTimeAction.action(2), CCFadeIn.action(1)));
+			super.onEnter();			
 		}
 		
 

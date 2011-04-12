@@ -18,7 +18,7 @@ public class TerminalLayer extends CCLayer {
 		_bundle = bundle;
 
 		CCLabel score = CCLabel.makeLabel("总得分: " + bundle.getTotalScore(),
-				"DroidSans", 24);
+				"DroidSans", 36);
 		CGSize s = CCDirector.sharedDirector().winSize();
 		score.setPosition(CGPoint.make(s.width / 2, s.height / 2));
 		addChild(score);
@@ -31,6 +31,7 @@ public class TerminalLayer extends CCLayer {
 			public void run() {
 				Toast.makeText(CCDirector.sharedDirector().getActivity(),
 						"退出", 3).show();
+				CCDirector.sharedDirector().getActivity().finish();
 			}
 		});
 		

@@ -51,7 +51,7 @@ public class PlaneSprite extends NodeEventSprite{
 	public void onEnter() {
 		super.onEnter();
 		setPosition(CGPoint.make(x, y));
-		CCIntervalAction act = CCMoveBy.action(20, CGPoint.make(xt, yt));
+		CCIntervalAction act = CCMoveBy.action(10, CGPoint.make(xt, yt));
 		runAction(CCRepeatForever.action(CCSequence.actions(act, act.reverse())));
 		
         CCAnimation animation = CCAnimation.animation("dance", 0.2f);
