@@ -8,11 +8,15 @@ import com.childdev.TestBundle;
 
 abstract public class ChildDevBaseTest {
 	protected TestBundle bundle = null;
-	public int _nextI = 0;
+	private int _nextI = 0;
 	public ArrayList<CCScene> _scenes = null;
 	public int score = 0;
 	public boolean tested = false;
 	
+	public boolean isTested() {
+		return tested;
+	}
+
 	public ChildDevBaseTest(TestBundle bundle) {
 		super();
 		this.bundle = bundle;
@@ -41,6 +45,7 @@ abstract public class ChildDevBaseTest {
 
 	public void load() {
 		_scenes = loadScenes();
+		tested = true;
 	}
 
 	public boolean hasNextScene() {
