@@ -87,14 +87,14 @@ public class AirsearchTest extends ChildDevBaseTest {
 		
 		@Override
 		public void onEnter() {
-			super.onEnter();			
+			super.onEnter();		
 		}
 		
-
 		@Override
-		public boolean ccTouchesEnded(MotionEvent event) {
-			getBundle().finishCurrentScene();
-			return true;
+		public void update(float d) {
+			super.update(d);
+			if (getTimeElapsed() >= 8.0f)
+				getBundle().finishCurrentScene();
 		}
 	}	
 }

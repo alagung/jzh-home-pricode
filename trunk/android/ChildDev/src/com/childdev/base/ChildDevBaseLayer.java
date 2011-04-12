@@ -115,6 +115,10 @@ public class ChildDevBaseLayer extends CCLayer implements UpdateCallback {
 		return a;	
 	}
 
+	public float getTimeElapsed() {
+		return tEl;
+	}
+
 	public ChildDevBaseLayer(ChildDevBaseTest test) {
 		super();
 		_test = test;
