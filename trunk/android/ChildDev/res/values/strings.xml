@@ -2,4 +2,6 @@
 <resources>
     <string name="hello">Hello World, main!</string>
     <string name="app_name">ChildDev</string>
+    <string name="animalmemory_test_instruction_show">小朋友，接下来你会看到很多小动物哦，请你牢牢记住这些小动物!</string>
+    <string name="animalmemory_test_instruction_select">小朋友，刚才的那些小动物你都记住了吗？现在，请选择你刚才看到的小动物。</string>
 </resources>

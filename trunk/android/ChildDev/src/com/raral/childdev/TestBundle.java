@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.raral.childdev.airsearch.AirsearchLayer;
 import com.raral.childdev.airsearch.AirsearchTest;
+import com.raral.childdev.animalmemory.AnimalmemoryTest;
 import com.raral.childdev.base.ChildDevBaseTest;
 
 public class TestBundle {
@@ -30,7 +31,7 @@ public class TestBundle {
 	public TestBundle() {
 		super();
 		_tests = new ChildDevBaseTest[] {
-				new AirsearchTest(this),
+				new AnimalmemoryTest(this),
 				new AirsearchTest(this),
 		};
 	}

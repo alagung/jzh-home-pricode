@@ -24,21 +24,21 @@ public class ChildDevBaseLayer extends CCLayer implements UpdateCallback {
 		public float startTime;
 		public float endTime;
 		public CCNode node;
-		public CCAction act;
+		public CCAction actor;
 		public boolean running;
 		public SimpleActor(float sTime, CCNode node, float eTime, CCAction act) {
 			super();
 			this.startTime = sTime;
 			this.endTime = eTime;
 			this.node = node;
-			this.act = act;
+			this.actor = act;
 			this.running = false;
 		}
 		public SimpleActor(float sTime, CCNode node, CCAction act) {
 			super();
 			this.startTime = sTime;
 			this.node = node;
-			this.act = act;
+			this.actor = act;
 			this.endTime = 0.0f;
 			this.running = false;
 		}
@@ -94,8 +94,8 @@ public class ChildDevBaseLayer extends CCLayer implements UpdateCallback {
 			if (!act.running && act.startTime <= tEl) {
 				act.running = true;
 				addChild(act.node);
-				if (act.act != null)
-					act.node.runAction(act.act);
+				if (act.actor != null)
+					act.node.runAction(act.actor);
 			}
 			if (act.running && (act.endTime > 0.0f && act.endTime <= tEl)) {
 				act.node.stopAllActions();
