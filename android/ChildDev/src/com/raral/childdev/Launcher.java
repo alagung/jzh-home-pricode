@@ -48,7 +48,7 @@ public class Launcher extends ExpandableListActivity {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		initData();
 		this.requestFullScreen();
 
 		for (int i = 0; i < groupNames.length; i++) {
@@ -81,6 +81,12 @@ public class Launcher extends ExpandableListActivity {
 		);
 		this.setListAdapter(adapter);
 		this.setContentView(R.layout.main);
+	}
+	
+	private void initData() {
+		// will use reflection 
+		Language.string.animalmemory_test_instruction_select = getString(R.string.animalmemory_test_instruction_select);
+		Language.string.animalmemory_test_instruction_select = getString(R.string.animalmemory_test_instruction_select);
 	}
 	
 	@Override
