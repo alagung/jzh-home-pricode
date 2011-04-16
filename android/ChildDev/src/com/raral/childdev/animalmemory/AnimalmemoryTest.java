@@ -62,7 +62,7 @@ public class AnimalmemoryTest extends ChildDevBaseTest {
 		s.add(object);
 		
 		object = CCScene.node();
-		object.addChild(new ShowAnimals(this));
+		object.addChild(new ShowAnimals());
 		s.add(object);
 
 		tested = true;
@@ -117,12 +117,12 @@ public class AnimalmemoryTest extends ChildDevBaseTest {
 	}	
 	
 
-	private class ShowAnimals extends ChildDevBaseLayer {
+	private class ShowAnimals extends CCLayer {
     	
-        public ShowAnimals(ChildDevBaseTest test) {
-			super(test);
+        public ShowAnimals() {
 			isTouchEnabled_ = true;
         	MyLog.v(LOG_TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
+        	
         	//background
         	String bgPath = memoryData.getBackgroupPicture();
 			ChildBaseSprite background = new ChildBaseSprite(bgPath);
@@ -134,7 +134,7 @@ public class AnimalmemoryTest extends ChildDevBaseTest {
 	        ChildBaseSprite animates = new ChildBaseSprite("grossini.png");
 	        addChild(animates, 1);
 
-            this.setPosition(CGPoint.make(CCDirector.sharedDirector().winSize().width / 2, CCDirector.sharedDirector().winSize().height / 3));
+	        animates.setPosition(CGPoint.make(CCDirector.sharedDirector().winSize().width / 2, CCDirector.sharedDirector().winSize().height / 3));
             
 			CCAnimation animation = CCAnimation.animation("animals",2);
 			

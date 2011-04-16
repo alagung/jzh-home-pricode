@@ -18,50 +18,54 @@ public class ChildBaseSprite  extends CCSprite {
 	
 	public ChildBaseSprite() {
 		super();
-		super.setScale(getCGScale());
+		setCGScale();
 	}
 
 	public ChildBaseSprite(CCTexture2D texture) {
 		super(texture);
-		super.setScale(getCGScale());
+		setCGScale();
 	}
 
 	public ChildBaseSprite(CCSpriteFrame spriteFrame) {
 		super(spriteFrame);
-		super.setScale(getCGScale());
+		setCGScale();
 	}
 
 	public ChildBaseSprite(String filename) {
 		super(filename);
-		super.setScale(getCGScale());
+		setCGScale();
 	}
 
 	public ChildBaseSprite(CCTexture2D texture, CGRect rect) {
 		super(texture, rect);
-		super.setScale(getCGScale());
+		setCGScale();
 	}
 
 	public ChildBaseSprite(String spriteFrameName, boolean isFrame) {
 		super(spriteFrameName, isFrame);
-		super.setScale(getCGScale());
+		setCGScale();
 	}
 
 	public ChildBaseSprite(String filename, CGRect rect) {
 		super(filename, rect);
-		super.setScale(getCGScale());
+		setCGScale();
 	}
 
 	public ChildBaseSprite(Bitmap image, String key) {
 		super(image, key);
-		super.setScale(getCGScale());
+		setCGScale();
 	}
 
 	public ChildBaseSprite(CCSpriteSheet spritesheet, CGRect rect) {
 		super(spritesheet, rect);
-		super.setScale(getCGScale());
+		setCGScale();
 	}
 	
-	private float getCGScale() {
+	private void setCGScale() {
+		super.setScale(getAllScale());
+	}
+	
+	private float getAllScale() {
 		MyLog.v(LOG_TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
 		CGSize s = CCDirector.sharedDirector().winSize();
 		float wScale = s.width / Config.DEFAULT_SCREEN_WIDTH;
