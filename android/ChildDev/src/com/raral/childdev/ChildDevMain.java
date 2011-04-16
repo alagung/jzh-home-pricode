@@ -42,7 +42,7 @@ public class ChildDevMain extends Activity{
         CCDirector.sharedDirector().attachInView(mGLSurfaceView);
 
         // set landscape mode
-        CCDirector.sharedDirector().setLandscape(true);
+        CCDirector.sharedDirector().setLandscape(false);
 
         // show FPS
         CCDirector.sharedDirector().setDisplayFPS(true);

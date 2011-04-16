@@ -1,6 +1,5 @@
 package com.raral.childdev.base;
 
-import org.cocos2d.nodes.CCSprite;
 import org.cocos2d.nodes.CCSpriteFrame;
 import org.cocos2d.nodes.CCSpriteSheet;
 import org.cocos2d.opengl.CCTexture2D;
@@ -9,7 +8,7 @@ import org.cocos2d.types.CGRect;
 
 import android.graphics.Bitmap;
 
-abstract public class NodeEventSprite extends CCSprite implements CCTouchDelegateProtocol{
+abstract public class NodeEventSprite extends ChildBaseSprite implements CCTouchDelegateProtocol{
 
 	public NodeEventSprite() {
 		super();
@@ -25,6 +24,10 @@ abstract public class NodeEventSprite extends CCSprite implements CCTouchDelegat
 
 	public NodeEventSprite(String filename) {
 		super(filename);
+	}
+
+	public NodeEventSprite(String filename, float scale) {
+		super(filename, scale);
 	}
 
 	public NodeEventSprite(CCTexture2D texture, CGRect rect) {
