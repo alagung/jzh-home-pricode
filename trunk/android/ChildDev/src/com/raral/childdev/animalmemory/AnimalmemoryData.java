@@ -19,12 +19,14 @@ public class AnimalmemoryData {
 	private static final String ASSETS_PATH_PICTURE = "animalmemory_test";
 	private static final String PICTURE_SUFFIX = ".png";
 	private static final String BACKGROUND_PICTURE = "bg.png";
+	private static final int TOTAL_PICTUREGROUPS = 1;
+	private static final int TOTAL_PICTURES = 11;
 	private static final int STEP1_SLEEPTIME = 2; //unit second.
-	private static final int STEP1_SHOWPICTURES = 16;
-	private static final int TOTAL_PICTUREGROUPS = 2;
-	private static final int TOTAL_PICTURES = 34;
-	private static final int STEP2_APPEARED = 9;
-	private static final int STEP2_UNAPPEARED = 9;
+	private static final int STEP1_SHOWPICTURES = 8;
+	private static final int STEP2_APPEARED = 5;
+	private static final int STEP2_UNAPPEARED = 5;
+	private static final int PICTURE_WIDTH = 354;
+	private static final int PICTURE_HEIGHT = 371;
 	private List<Integer> pictureGroupList = new ArrayList<Integer>();
 	private List<String> PictureList = new ArrayList<String>();
 	private List<String> step1ShowPictureList = new ArrayList<String>();
@@ -38,6 +40,18 @@ public class AnimalmemoryData {
 	
 	public AnimalmemoryData(){
 		initData();
+	}
+	
+	public int getStep2InStep1Number() {
+		return STEP2_APPEARED;
+	}
+		
+	public int getPictureWidth() {
+		return PICTURE_WIDTH;
+	}
+	
+	public int getPictureHeight() {
+		return PICTURE_HEIGHT;
 	}
 	
 	public List<String> getStep1ShowPictureList() {
@@ -56,7 +70,9 @@ public class AnimalmemoryData {
 		return STEP1_SLEEPTIME * STEP1_SHOWPICTURES;
 	}
 	
+	
 	public void initData() {
+		assert (TOTAL_PICTUREGROUPS > 0 && TOTAL_PICTURES > 0 && TOTAL_PICTURES >= STEP1_SHOWPICTURES );
 		// initialize picture groups
 		for(int i=1; i<=TOTAL_PICTUREGROUPS; i++){
 			pictureGroupList.add(i);
@@ -84,13 +100,19 @@ public class AnimalmemoryData {
 		// initialize step 2 pictures
 		Collections.shuffle(appearPictures);
 		Collections.shuffle(unappearPictures);
-		for(int i=0; i<=STEP2_APPEARED; i++){
-			step2ShowPictureList.add(appearPictures.get(i));
+
+		for (int i = 0; i < appearPictures.size(); i++) {
+			if (i < STEP2_APPEARED) {
+				step2ShowPictureList.add(appearPictures.get(i));
+			}
 		}
-		for(int i=0; i<=STEP2_UNAPPEARED; i++){
-			step2ShowPictureList.add(unappearPictures.get(i));
+		for (int i = 0; i < unappearPictures.size(); i++) {
+			if (i < STEP2_UNAPPEARED) {
+				step2ShowPictureList.add(unappearPictures.get(i));
+			}
 		}
 		Collections.shuffle(step2ShowPictureList);
 	}
+
 
 }

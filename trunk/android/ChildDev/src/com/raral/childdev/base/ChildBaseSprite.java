@@ -36,6 +36,11 @@ public class ChildBaseSprite  extends CCSprite {
 		setCGScale();
 	}
 
+	public ChildBaseSprite(String filename, float scale) {
+		super(filename);
+		setCGScale(scale);
+	}
+	
 	public ChildBaseSprite(CCTexture2D texture, CGRect rect) {
 		super(texture, rect);
 		setCGScale();
@@ -63,6 +68,10 @@ public class ChildBaseSprite  extends CCSprite {
 	
 	private void setCGScale() {
 		super.setScale(getAllScale());
+	}
+
+	private void setCGScale(float scale) {
+		super.setScale(scale);
 	}
 	
 	private float getAllScale() {

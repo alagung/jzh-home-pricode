@@ -85,8 +85,10 @@ public class Launcher extends ExpandableListActivity {
 	
 	private void initData() {
 		// will use reflection 
-		Language.string.animalmemory_test_instruction_select = getString(R.string.animalmemory_test_instruction_select);
-		Language.string.animalmemory_test_instruction_select = getString(R.string.animalmemory_test_instruction_select);
+		Language.string.animalmemory_test_instruction_show1 = getString(R.string.animalmemory_test_instruction_show1);
+		Language.string.animalmemory_test_instruction_show2 = getString(R.string.animalmemory_test_instruction_show2);
+		Language.string.animalmemory_test_instruction_select1 = getString(R.string.animalmemory_test_instruction_select1);
+		Language.string.animalmemory_test_instruction_select2 = getString(R.string.animalmemory_test_instruction_select2);
 	}
 	
 	@Override
