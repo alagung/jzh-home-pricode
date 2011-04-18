@@ -16,7 +16,7 @@ import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
 
 
-import com.raral.childdev.Language;
+import com.raral.childdev.R;
 import com.raral.childdev.Report;
 import com.raral.childdev.TestBundle;
 import com.raral.childdev.base.ChildBaseSprite;
@@ -24,6 +24,7 @@ import com.raral.childdev.base.ChildDevBaseLayer;
 import com.raral.childdev.base.ChildDevBaseTest;
 
 import com.raral.childdev.util.MyLog;
+import com.raral.childdev.util.Tools;
 
 public class AnimalmemoryTest extends ChildDevBaseTest {
 	private static final String LOG_TAG = "AnimalmemoryTest";
@@ -85,8 +86,8 @@ public class AnimalmemoryTest extends ChildDevBaseTest {
 			isTouchEnabled_ = true;
 			MyLog.v(LOG_TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
 
-			addHint(0.0f, Language.string.animalmemory_test_instruction_show1);
-			addHint(8.0f, Language.string.animalmemory_test_instruction_show2);
+			addHint(0.0f, Tools.getString(R.string.animalmemory_test_instruction_show1));
+			addHint(8.0f, Tools.getString(R.string.animalmemory_test_instruction_show2));
 //			
 //			CGSize s = CCDirector.sharedDirector().winSize();
 //			ChildBaseSprite sample = new ChildBaseSprite("grossini.png");
@@ -183,8 +184,8 @@ public class AnimalmemoryTest extends ChildDevBaseTest {
 			isTouchEnabled_ = true;
 			MyLog.v(LOG_TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
 
-			addHint(0.0f, Language.string.animalmemory_test_instruction_select1);
-			addHint(4.0f, Language.string.animalmemory_test_instruction_select2);
+			addHint(0.0f, Tools.getString(R.string.animalmemory_test_instruction_select1));
+			addHint(4.0f, Tools.getString(R.string.animalmemory_test_instruction_select2));
 //			
 //			CGSize s = CCDirector.sharedDirector().winSize();
 //			ChildBaseSprite sample = new ChildBaseSprite("grossini.png");

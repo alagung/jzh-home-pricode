@@ -48,7 +48,6 @@ public class Launcher extends ExpandableListActivity {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		initData();
 		this.requestFullScreen();
 
 		for (int i = 0; i < groupNames.length; i++) {
@@ -81,14 +80,6 @@ public class Launcher extends ExpandableListActivity {
 		);
 		this.setListAdapter(adapter);
 		this.setContentView(R.layout.main);
-	}
-	
-	private void initData() {
-		// will use reflection 
-		Language.string.animalmemory_test_instruction_show1 = getString(R.string.animalmemory_test_instruction_show1);
-		Language.string.animalmemory_test_instruction_show2 = getString(R.string.animalmemory_test_instruction_show2);
-		Language.string.animalmemory_test_instruction_select1 = getString(R.string.animalmemory_test_instruction_select1);
-		Language.string.animalmemory_test_instruction_select2 = getString(R.string.animalmemory_test_instruction_select2);
 	}
 	
 	@Override
