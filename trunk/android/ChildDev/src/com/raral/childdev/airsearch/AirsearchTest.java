@@ -13,14 +13,14 @@ import org.cocos2d.nodes.CCSprite;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
 
-import com.raral.childdev.TestBundle;
+import com.raral.childdev.ShowChapters;
 import com.raral.childdev.base.ChildDevBaseLayer;
-import com.raral.childdev.base.ChildDevBaseTest;
+import com.raral.childdev.base.ChildDevBaseChapter;
 
-public class AirsearchTest extends ChildDevBaseTest {
+public class AirsearchTest extends ChildDevBaseChapter {
 	
-	public AirsearchTest(TestBundle bundle) {
-		super(bundle);
+	public AirsearchTest() {
+		super();
 	}
 
 	@Override
@@ -39,14 +39,14 @@ public class AirsearchTest extends ChildDevBaseTest {
 		CCScene object;
 		
 		object = CCScene.node();
-		object.addChild(new Instruction(this));
+		object.addChild(new Instruction());
 		s.add(object);
 		
 		object = CCScene.node();
-		object.addChild(new AirsearchLayer(this));
+		object.addChild(new AirsearchLayer());
 		s.add(object);
 
-		tested = true;
+		mIsLoaded = true;
 		return s;
 	}
 	
@@ -67,8 +67,8 @@ public class AirsearchTest extends ChildDevBaseTest {
 	        		CCFadeIn.action(1), CCFiniteTimeAction.action(3), CCFadeOut.action(2)));
 	        yy = hint.getPositionRef().y - hint.getContentSizeRef().height - 20;
 		}
-		public Instruction(ChildDevBaseTest test) {
-			super(test);
+		public Instruction() {
+			super();
 			isTouchEnabled_ = true;
 			
 			CGSize s = CCDirector.sharedDirector().winSize();
@@ -90,8 +90,8 @@ public class AirsearchTest extends ChildDevBaseTest {
 		@Override
 		public void update(float d) {
 			super.update(d);
-			if (getTimeElapsed() >= 8.0f)
-				getBundle().finishCurrentScene();
+			if (getElapsedTime() >= 8.0f)
+				ShowChapters.getInstance().finishCurrentScene();
 		}
 	}	
 }

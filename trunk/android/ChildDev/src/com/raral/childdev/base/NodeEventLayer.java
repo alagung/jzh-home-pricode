@@ -9,8 +9,8 @@ import org.cocos2d.protocols.CCTouchDelegateProtocol;
 import android.view.MotionEvent;
 
 public abstract class NodeEventLayer extends ChildDevBaseLayer{
-	public NodeEventLayer(ChildDevBaseTest test) {
-		super(test);
+	public NodeEventLayer() {
+		super();
 		isTouchEnabled_ = true;
 	}
 	
