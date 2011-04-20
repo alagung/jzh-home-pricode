@@ -106,8 +106,8 @@ public class ShowChapters {
 		}
 	}
 
-	public boolean isRunning(ChildDevBaseChapter test) {
-		return test == mCurrentChapter;
+	public boolean isRunning(ChildDevBaseChapter chapter) {
+		return chapter == mCurrentChapter;
 	}
 
 	public final boolean postToUI(Runnable r) {
