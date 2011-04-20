@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.cocos2d.actions.base.CCFiniteTimeAction;
-import org.cocos2d.actions.interval.CCAnimate;
 import org.cocos2d.actions.interval.CCFadeIn;
 import org.cocos2d.actions.interval.CCFadeOut;
 import org.cocos2d.actions.interval.CCSequence;
 import org.cocos2d.layers.CCScene;
-import org.cocos2d.nodes.CCAnimation;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.types.CGPoint;
@@ -28,7 +26,7 @@ import com.raral.childdev.util.Tools;
 
 public class AnimalmemoryTest extends ChildDevBaseChapter {
 	private static final String LOG_TAG = "AnimalmemoryTest";
-	public static AnimalmemoryData mAnimalMemoryData = new AnimalmemoryData();
+	public static AnimalmemoryData mAnimalMemoryData;
 	
 	public AnimalmemoryTest() {
 		super();
@@ -38,6 +36,7 @@ public class AnimalmemoryTest extends ChildDevBaseChapter {
 	
 	private void initData() {
 		Report.animalmemory_score = 0;
+		mAnimalMemoryData = new AnimalmemoryData();
 	}
 
 	@Override
@@ -88,12 +87,7 @@ public class AnimalmemoryTest extends ChildDevBaseChapter {
 
 			addHint(0.0f, Tools.getString(R.string.animalmemory_test_instruction_show1));
 			addHint(8.0f, Tools.getString(R.string.animalmemory_test_instruction_show2));
-//			
-//			CGSize s = CCDirector.sharedDirector().winSize();
-//			ChildBaseSprite sample = new ChildBaseSprite("grossini.png");
-//			sample.setPosition(s.width / 2, s.height / 2);
-//			sample.setOpacity(0);
-//			addSimpleAct(2.0f, sample, CCFadeIn.action(1.5f));
+
 		}
 		
 		private void addHint( float sTime, String text)
@@ -129,12 +123,24 @@ public class AnimalmemoryTest extends ChildDevBaseChapter {
 
 	private class AnimalsShow extends ChildDevBaseLayer {
 		List<String> step1ShowPictureList;
+		int pictureNumber = 0;
+		int pictureIndex = 0;
 		float sleepTime = 2; //unit is second
+		float endTime = 0;
+		ChildBaseSprite animalPicture = null;
+		float animalPictureX = 0;
+		float animalPictureY = 0;
+		
         public AnimalsShow() {
 			super();
-			isTouchEnabled_ = true;
         	MyLog.v(LOG_TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
+        	
+        	isTouchEnabled_ = true;
         	step1ShowPictureList = mAnimalMemoryData.getStep1ShowPictureList();
+        	pictureNumber = step1ShowPictureList.size();
+        	endTime = (pictureNumber+1)*sleepTime;
+        	animalPictureX = CCDirector.sharedDirector().winSize().width / 2;
+    		animalPictureY = CCDirector.sharedDirector().winSize().height / 3;
         	
         	//background
         	String bgPath = mAnimalMemoryData.getBackgroupPicture();
@@ -142,23 +148,28 @@ public class AnimalmemoryTest extends ChildDevBaseChapter {
 			// change the transform anchor point (optional)
 			background.setAnchorPoint(CGPoint.make(0, 0));
 			addChild(background, 0);
-             
-        	//animate 
-	        ChildBaseSprite animates = new ChildBaseSprite("grossini.png");
-	        addChild(animates, 1);
 
-	        animates.setPosition(CGPoint.make(CCDirector.sharedDirector().winSize().width / 2, CCDirector.sharedDirector().winSize().height / 3));
-            
-			CCAnimation animation = CCAnimation.animation("animals", sleepTime);			
-	        
-			for( int i=0; i<step1ShowPictureList.size(); i++) {
-				String pic = step1ShowPictureList.get(i);
-				MyLog.v(LOG_TAG, "pic: " + pic);
-				animation.addFrame(pic);
+        }
+        
+        private void animalSlide(){
+        	MyLog.v(LOG_TAG, "pictureIndex: " + pictureIndex + ", pictureNumber:" + pictureNumber);
+        	if(pictureIndex > pictureNumber-1)
+        		return;
+
+			if(getElapsedTime() > (pictureIndex+1)*sleepTime) {
+	        	if(animalPicture != null) {
+	        		removeChild(animalPicture, true);
+	        	}
+	        	
+	        	String pic = step1ShowPictureList.get(pictureIndex);
+	        	MyLog.v(LOG_TAG, "pic: " + pic);
+	        	
+	        	animalPicture = new ChildBaseSprite(pic);
+				addChild(animalPicture, 1);
+				animalPicture.setPosition(CGPoint.make(animalPictureX, animalPictureY));
+				
+				pictureIndex++;
 			}
-
-			CCAnimate action = CCAnimate.action(animation, false);
-			animates.runAction(CCSequence.actions(action));
         }
         
 		
@@ -170,7 +181,9 @@ public class AnimalmemoryTest extends ChildDevBaseChapter {
 		@Override
 		public void update(float d) {
 			super.update(d);
-			if (getElapsedTime() >= step1ShowPictureList.size() * sleepTime)
+			animalSlide();
+
+			if (getElapsedTime() > endTime)
 				ShowChapters.getInstance().finishCurrentScene();
 		}
         
@@ -186,12 +199,6 @@ public class AnimalmemoryTest extends ChildDevBaseChapter {
 
 			addHint(0.0f, Tools.getString(R.string.animalmemory_test_instruction_select1));
 			addHint(4.0f, Tools.getString(R.string.animalmemory_test_instruction_select2));
-//			
-//			CGSize s = CCDirector.sharedDirector().winSize();
-//			ChildBaseSprite sample = new ChildBaseSprite("grossini.png");
-//			sample.setPosition(s.width / 2, s.height / 2);
-//			sample.setOpacity(0);
-//			addSimpleAct(2.0f, sample, CCFadeIn.action(1.5f));
 		}
 		
 		private void addHint( float sTime, String text)

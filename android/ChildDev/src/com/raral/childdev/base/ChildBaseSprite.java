@@ -67,14 +67,14 @@ public class ChildBaseSprite  extends CCSprite {
 	}
 	
 	private void setCGScale() {
-		super.setScale(getAllScale());
+		super.setScale(getSizeScale());
 	}
 
 	private void setCGScale(float scale) {
 		super.setScale(scale);
 	}
 	
-	private float getAllScale() {
+	private float getSizeScale() {
 		MyLog.v(LOG_TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
 		CGSize s = CCDirector.sharedDirector().winSize();
 		float wScale = s.width / Config.DEFAULT_SCREEN_WIDTH;

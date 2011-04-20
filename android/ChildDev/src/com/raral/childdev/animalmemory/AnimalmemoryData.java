@@ -20,7 +20,7 @@ public class AnimalmemoryData {
 	private static final String PICTURE_SUFFIX = ".png";
 	private static final String BACKGROUND_PICTURE = "bg.png";
 	private static final int TOTAL_PICTUREGROUPS = 1;
-	private static final int TOTAL_PICTURES = 13;
+	private static final int TOTAL_PICTURES = 11;
 	private static final int STEP1_SLEEPTIME = 2; //unit second.
 	private static final int STEP1_SHOWPICTURES = 8;
 	private static final int STEP2_APPEARED = 5;
