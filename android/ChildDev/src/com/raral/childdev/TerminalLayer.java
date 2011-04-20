@@ -12,23 +12,21 @@ import org.cocos2d.utils.CCFormatter;
 import android.view.MotionEvent;
 
 import com.raral.childdev.base.ChildDevBaseLayer;
-import com.raral.childdev.base.ChildDevBaseTest;
+import com.raral.childdev.base.ChildDevBaseChapter;
 
 public class TerminalLayer extends ChildDevBaseLayer {
-	TestBundle _bundle;
 
-	public TerminalLayer(TestBundle bundle) {
-		super(null);
+	public TerminalLayer() {
+		super();
 		isTouchEnabled_ = true;
-		_bundle = bundle;
 
-		ChildDevBaseTest tests[] = _bundle.getTests();
+		ChildDevBaseChapter tests[] = ShowChapters.getInstance().getChapters();
 		
 		CGSize s = CCDirector.sharedDirector().winSize();
 		float yy = s.height - 20;
 		for (int i=0;i<tests.length;++i)
 		{
-			ChildDevBaseTest t = tests[i];
+			ChildDevBaseChapter t = tests[i];
 			CCLabel line = CCLabel.makeLabel(CCFormatter.format("%s: %4d", t
 					.getName(), t.getScore()), "DroidSans", 16);
 			line.setAnchorPoint(0.5f, 1.0f);
@@ -36,8 +34,7 @@ public class TerminalLayer extends ChildDevBaseLayer {
 	        addChild(line);
 	        yy = line.getPosition().y - line.getContentSizeRef().height - 20;	        
 		}
-		CCLabel score = CCLabel.makeLabel(CCFormatter.format("总得分: %d", bundle
-				.getTotalScore()), "DroidSans", 36);
+		CCLabel score = CCLabel.makeLabel(CCFormatter.format("总得分: %d", ShowChapters.getInstance().getTotalScore()), "DroidSans", 36);
 		score.setAnchorPoint(0.5f, 1.0f);
 		score.setPosition(s.width / 2, yy);
 		addChild(score);
@@ -56,7 +53,7 @@ public class TerminalLayer extends ChildDevBaseLayer {
 
 	@Override
 	public boolean ccTouchesEnded(MotionEvent event) {
-		_bundle.postToUI(new Runnable() {			
+		ShowChapters.getInstance().postToUI(new Runnable() {			
 			@Override
 			public void run() {
 				CCDirector.sharedDirector().getActivity().finish();

@@ -16,8 +16,6 @@ public class ChildDevMain extends Activity{
     private CCGLSurfaceView mGLSurfaceView;
 
 	private Handler handler;
-	private TestBundle bundle = new TestBundle();
-
 	public Handler getHandler() {
 		return handler;
 	}
@@ -50,7 +48,7 @@ public class ChildDevMain extends Activity{
         // frames per second
         CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
-        bundle.start();
+        ShowChapters.getInstance().start();
     }
 
     @Override

@@ -11,7 +11,8 @@ import org.cocos2d.types.CGSize;
 import android.view.MotionEvent;
 
 import com.raral.childdev.Report;
-import com.raral.childdev.base.ChildDevBaseTest;
+import com.raral.childdev.ShowChapters;
+import com.raral.childdev.base.ChildDevBaseChapter;
 import com.raral.childdev.base.NodeEventLayer;
 import com.raral.childdev.base.NodeEventSprite;
 import com.raral.childdev.util.MyLog;
@@ -22,7 +23,6 @@ public class AnimalsSelectLayer extends NodeEventLayer {
 	CCLabel score;
 	CCLabel time;
 	float remain = 60.0f;
-	List<String> step1ShowPictureList;
 	List<String> step2ShowPictureList;
 	int selectNumber = 0;
 	int step2InStep1Number = 0;
@@ -33,15 +33,14 @@ public class AnimalsSelectLayer extends NodeEventLayer {
 	int picturesPadding = 20; // pixel
 	int scoreTextHeight = 20;
 
-	public AnimalsSelectLayer(ChildDevBaseTest test, AnimalmemoryData memoryData) {
-		super(test);
+	public AnimalsSelectLayer() {
+		super();
 		MyLog.v(LOG_TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
 		
-		step1ShowPictureList = memoryData.getStep1ShowPictureList();
-		step2ShowPictureList = memoryData.getStep2ShowPictureList();
-		step2InStep1Number = memoryData.getStep2InStep1Number();
-		int pictureWidth = memoryData.getPictureWidth();
-		int pictureHeight = memoryData.getPictureHeight();
+		step2ShowPictureList = AnimalmemoryTest.mAnimalMemoryData.getStep2ShowPictureList();
+		step2InStep1Number = AnimalmemoryTest.mAnimalMemoryData.getStep2InStep1Number();
+		int pictureWidth = AnimalmemoryTest.mAnimalMemoryData.getPictureWidth();
+		int pictureHeight = AnimalmemoryTest.mAnimalMemoryData.getPictureHeight();
 		
 		CGSize s = CCDirector.sharedDirector().winSize();
 		
@@ -65,7 +64,7 @@ public class AnimalsSelectLayer extends NodeEventLayer {
 			int x = (i % (picturesALine-1)) * w + ox;
 			int y = (i / (picturesALine-1)) * h + oy;
 			MyLog.v(LOG_TAG, String.format("i:%d, x:%d, y:%d", i, x, y));
-			addSimpleAct(1.0f, new AnimalSprite(getTest(), pic, x, y, 0, 0, pic), null);
+			addSimpleAct(1.0f, new AnimalSprite(pic, x, y, pic), null);
 		}
         
         score = CCLabel.makeLabel("得分: 0", "DroidSans", 18);
@@ -88,37 +87,35 @@ public class AnimalsSelectLayer extends NodeEventLayer {
 	@Override
 	public void update(float d) {
 		super.update(d);
-		score.setString("得分: " + getTest().score);	
+		int curScore = ShowChapters.getInstance().getCurrentScore();
+		score.setString("得分: " + curScore);	
 		
 		remain -= d;
 		if (remain <= 0)
 			remain = 0;
 		time.setString("时间剩余: "+(int)remain+"秒");
 		
-		if (getTest().score >= 3) {
+		if (curScore >= 3) {
 			if (remain > 1.0f)
 				remain = 1.0f;
 		}
 		
 		if (remain <= 0.0f) {
-			getTest().getBundle().finishCurrentScene();
+			ShowChapters.getInstance().finishCurrentScene();
 		}
 	}
 	
 	private class AnimalSprite extends NodeEventSprite{
 
-		private ChildDevBaseTest _test = null;
 		private float x;
 		private float y;
-		private float xt;
-		private float yt;
 		private String name;
 		
 		@Override
 		public boolean ccTouchesBegan(MotionEvent event) {
 			if(selectNumber < step2InStep1Number){
-				if(step1ShowPictureList.contains(this.name)) {
-					_test.score += 1;	
+				if(AnimalmemoryTest.mAnimalMemoryData.getStep1ShowPictureList().contains(this.name)) {
+					ShowChapters.getInstance().getCurrentChapter().mScore += 1;	
 					Report.animalmemory_score++;
 				}
 				selectNumber++;
@@ -135,14 +132,11 @@ public class AnimalsSelectLayer extends NodeEventLayer {
 			setPosition(CGPoint.make(x, y));
 		}
 
-		public AnimalSprite(ChildDevBaseTest test, String filename, float x, float y, float xt, float yt, String name) {
+		public AnimalSprite(String filename, float x, float y, String name) {
 			super(filename, scale);
 			this.x = x;
 			this.y = y;
-			this.xt = xt;
-			this.yt = yt;	
 			this.name = name;
-			this._test = test;
 		}
 
 		@Override

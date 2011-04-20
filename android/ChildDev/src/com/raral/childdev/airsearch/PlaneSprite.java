@@ -5,27 +5,19 @@ import org.cocos2d.actions.interval.CCAnimate;
 import org.cocos2d.actions.interval.CCIntervalAction;
 import org.cocos2d.actions.interval.CCMoveBy;
 import org.cocos2d.actions.interval.CCSequence;
-import org.cocos2d.events.CCTouchDispatcher;
 import org.cocos2d.nodes.CCAnimation;
 import org.cocos2d.nodes.CCDirector;
-import org.cocos2d.protocols.CCTouchDelegateProtocol;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.utils.CCFormatter;
 
-import com.raral.childdev.ChildDevMain;
-import com.raral.childdev.base.ChildDevBaseTest;
+import com.raral.childdev.ShowChapters;
 import com.raral.childdev.base.NodeEventSprite;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.test.UiThreadTest;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
 public class PlaneSprite extends NodeEventSprite{
 
-	private ChildDevBaseTest _test = null;
 	private float x;
 	private float y;
 	private float xt;
@@ -34,13 +26,13 @@ public class PlaneSprite extends NodeEventSprite{
 	
 	@Override
 	public boolean ccTouchesBegan(MotionEvent event) {
-		_test.getBundle().postToUI(new Runnable() {			
+		ShowChapters.getInstance().postToUI(new Runnable() {			
 			@Override
 			public void run() {
 				Toast.makeText(CCDirector.sharedDirector().getActivity(), "选中了飞机 "+name, 30).show();
 			}
 		});
-		_test.score += 1;
+		ShowChapters.getInstance().getCurrentChapter().mScore += 1;
 		stopAllActions();
 		removeAllChildren(true);
 		getParent().removeChild(this, true);
@@ -62,14 +54,13 @@ public class PlaneSprite extends NodeEventSprite{
         runAction(CCRepeatForever.action(CCAnimate.action(animation)));
 	}
 
-	public PlaneSprite(ChildDevBaseTest test, String filename, float x, float y, float xt, float yt, String name) {
+	public PlaneSprite(String filename, float x, float y, float xt, float yt, String name) {
 		super(filename);
 		this.x = x;
 		this.y = y;
 		this.xt = xt;
 		this.yt = yt;	
 		this.name = name;
-		this._test = test;
 	}
 
 	@Override

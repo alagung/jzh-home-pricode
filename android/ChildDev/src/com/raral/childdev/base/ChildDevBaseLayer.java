@@ -4,13 +4,8 @@ import java.util.ArrayList;
 
 import org.cocos2d.actions.UpdateCallback;
 import org.cocos2d.actions.base.CCAction;
-import org.cocos2d.actions.base.CCFiniteTimeAction;
-import org.cocos2d.actions.interval.CCFadeIn;
-import org.cocos2d.actions.interval.CCFadeOut;
-import org.cocos2d.actions.interval.CCSequence;
 import org.cocos2d.layers.CCLayer;
 import org.cocos2d.nodes.CCDirector;
-import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.nodes.CCNode;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
@@ -21,33 +16,38 @@ import org.cocos2d.utils.pool.OneClassPool;
 
 public class ChildDevBaseLayer extends CCLayer implements UpdateCallback {
 	public class SimpleActor {
-		public float startTime;
-		public float endTime;
-		public CCNode node;
-		public CCAction actor;
-		public boolean running;
-		public SimpleActor(float sTime, CCNode node, float eTime, CCAction act) {
+		public float mStartTime;
+		public float mEndTime;
+		public CCNode mNode;
+		public CCAction mAction;
+		public boolean mRunning;
+		public SimpleActor(float startTime, CCNode node, float endTime, CCAction action) {
 			super();
-			this.startTime = sTime;
-			this.endTime = eTime;
-			this.node = node;
-			this.actor = act;
-			this.running = false;
+			this.mStartTime = startTime;
+			this.mEndTime = endTime;
+			this.mNode = node;
+			this.mAction = action;
+			this.mRunning = false;
 		}
-		public SimpleActor(float sTime, CCNode node, CCAction act) {
+		public SimpleActor(float startTime, CCNode node, CCAction action) {
 			super();
-			this.startTime = sTime;
-			this.node = node;
-			this.actor = act;
-			this.endTime = 0.0f;
-			this.running = false;
+			this.mStartTime = startTime;
+			this.mNode = node;
+			this.mAction = action;
+			this.mEndTime = 0.0f;
+			this.mRunning = false;
 		}
 		
 	}
-	ArrayList<SimpleActor> _acts = new ArrayList<SimpleActor>();
 	
-	private ChildDevBaseTest _test = null;
-	private float tEl = 0.0f;
+	ArrayList<SimpleActor> mSimpleActors = new ArrayList<SimpleActor>();
+	
+	private float mElapsedTime = 0.0f;
+	
+	public ChildDevBaseLayer() {
+		super();
+		mSimpleActors.clear();
+	}
 
 	/**
 	 * Determine whether a UIKit coordinate is in Node. Will convert to GL coordinate first
@@ -83,54 +83,44 @@ public class ChildDevBaseLayer extends CCLayer implements UpdateCallback {
 			rectPool.free(r);
 		}
 	}
-
-	public ChildDevBaseTest getTest() {
-		return _test;
-	}
 	
-	private void processActs() {
-		for (int i = 0; i < _acts.size(); ++i) {
-			SimpleActor act = _acts.get(i);
-			if (!act.running && act.startTime <= tEl) {
-				act.running = true;
-				addChild(act.node);
-				if (act.actor != null)
-					act.node.runAction(act.actor);
+	private void processActors() {
+		for (int i = 0; i < mSimpleActors.size(); ++i) {
+			SimpleActor act = mSimpleActors.get(i);
+			if (!act.mRunning && act.mStartTime <= mElapsedTime) {
+				act.mRunning = true;
+				addChild(act.mNode);
+				if (act.mAction != null)
+					act.mNode.runAction(act.mAction);
 			}
-			if (act.running && (act.endTime > 0.0f && act.endTime <= tEl)) {
-				act.node.stopAllActions();
-				removeChild(act.node, true);
-				act.running = false;				
+			if (act.mRunning && (act.mEndTime > 0.0f && act.mEndTime <= mElapsedTime)) {
+				act.mNode.stopAllActions();
+				removeChild(act.mNode, true);
+				act.mRunning = false;				
 			}
 		}
 	}
 		
 	public void addSimpleAct(SimpleActor actor) {
-		_acts.add(actor);
+		mSimpleActors.add(actor);
 	}
 	
 	public SimpleActor addSimpleAct(float sTime, CCNode node, CCAction act) {
 		SimpleActor a = new SimpleActor(sTime, node, act);
-		_acts.add(a);
+		mSimpleActors.add(a);
 		return a;	
 	}
 
-	public float getTimeElapsed() {
-		return tEl;
-	}
-
-	public ChildDevBaseLayer(ChildDevBaseTest test) {
-		super();
-		_test = test;
-		_acts.clear();
+	public float getElapsedTime() {
+		return mElapsedTime;
 	}
 	
 	@Override
 	public void onEnter() {
 		super.onEnter();
 		schedule(this);
-		tEl = 0.0f;
-		processActs();		
+		mElapsedTime = 0.0f;
+		processActors();		
 	}
 
 	@Override
@@ -141,7 +131,7 @@ public class ChildDevBaseLayer extends CCLayer implements UpdateCallback {
 
 	@Override
 	public void update(float d) {
-		tEl += d;
-		processActs();
+		mElapsedTime += d;
+		processActors();
 	}
 }

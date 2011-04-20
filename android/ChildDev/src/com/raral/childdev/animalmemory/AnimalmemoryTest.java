@@ -18,20 +18,20 @@ import org.cocos2d.types.CGSize;
 
 import com.raral.childdev.R;
 import com.raral.childdev.Report;
-import com.raral.childdev.TestBundle;
+import com.raral.childdev.ShowChapters;
 import com.raral.childdev.base.ChildBaseSprite;
 import com.raral.childdev.base.ChildDevBaseLayer;
-import com.raral.childdev.base.ChildDevBaseTest;
+import com.raral.childdev.base.ChildDevBaseChapter;
 
 import com.raral.childdev.util.MyLog;
 import com.raral.childdev.util.Tools;
 
-public class AnimalmemoryTest extends ChildDevBaseTest {
+public class AnimalmemoryTest extends ChildDevBaseChapter {
 	private static final String LOG_TAG = "AnimalmemoryTest";
-	private AnimalmemoryData memoryData = new AnimalmemoryData();
+	public static AnimalmemoryData mAnimalMemoryData = new AnimalmemoryData();
 	
-	public AnimalmemoryTest(TestBundle bundle) {
-		super(bundle);
+	public AnimalmemoryTest() {
+		super();
 		initData();
 		// TODO Auto-generated constructor stub
 	}
@@ -55,34 +55,34 @@ public class AnimalmemoryTest extends ChildDevBaseTest {
 	@Override
 	public ArrayList<CCScene> loadScenes() {
 		// TODO Auto-generated method stub
-		ArrayList<CCScene> s = new ArrayList<CCScene>();
-		CCScene object;
+		ArrayList<CCScene> sceneList = new ArrayList<CCScene>();
+		CCScene scene;
 		
-		object = CCScene.node();
-		object.addChild(new Instruction1(this));
-		s.add(object);
+		scene = CCScene.node();
+		scene.addChild(new Instruction1());
+		sceneList.add(scene);
 		
-		object = CCScene.node();
-		object.addChild(new AnimalsShow(this));
-		s.add(object);
+		scene = CCScene.node();
+		scene.addChild(new AnimalsShow());
+		sceneList.add(scene);
 		
-		object = CCScene.node();
-		object.addChild(new Instruction2(this));
-		s.add(object);
+		scene = CCScene.node();
+		scene.addChild(new Instruction2());
+		sceneList.add(scene);
 		
-		object = CCScene.node();
-		object.addChild(new AnimalsSelectLayer(this, memoryData));
-		s.add(object);
+		scene = CCScene.node();
+		scene.addChild(new AnimalsSelectLayer());
+		sceneList.add(scene);
 		
-		tested = true;
-		return s;
+		mIsLoaded = true;
+		return sceneList;
 	}
 	
 	private class Instruction1 extends ChildDevBaseLayer {
 		float yy = 0;
 
-		public Instruction1(ChildDevBaseTest test) {
-			super(test);
+		public Instruction1() {
+			super();
 			isTouchEnabled_ = true;
 			MyLog.v(LOG_TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
 
@@ -121,8 +121,8 @@ public class AnimalmemoryTest extends ChildDevBaseTest {
 		public void update(float d) {
 			super.update(d);
 			MyLog.v(LOG_TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
-			if (getTimeElapsed() >= 8.0f)
-				getBundle().finishCurrentScene();
+			if (getElapsedTime() >= 8.0f)
+				ShowChapters.getInstance().finishCurrentScene();
 		}
 	}	
 	
@@ -130,14 +130,14 @@ public class AnimalmemoryTest extends ChildDevBaseTest {
 	private class AnimalsShow extends ChildDevBaseLayer {
 		List<String> step1ShowPictureList;
 		float sleepTime = 2; //unit is second
-        public AnimalsShow(ChildDevBaseTest test) {
-			super(test);
+        public AnimalsShow() {
+			super();
 			isTouchEnabled_ = true;
         	MyLog.v(LOG_TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
-        	step1ShowPictureList = memoryData.getStep1ShowPictureList();
+        	step1ShowPictureList = mAnimalMemoryData.getStep1ShowPictureList();
         	
         	//background
-        	String bgPath = memoryData.getBackgroupPicture();
+        	String bgPath = mAnimalMemoryData.getBackgroupPicture();
 			ChildBaseSprite background = new ChildBaseSprite(bgPath);
 			// change the transform anchor point (optional)
 			background.setAnchorPoint(CGPoint.make(0, 0));
@@ -170,8 +170,8 @@ public class AnimalmemoryTest extends ChildDevBaseTest {
 		@Override
 		public void update(float d) {
 			super.update(d);
-			if (getTimeElapsed() >= step1ShowPictureList.size() * sleepTime)
-				getBundle().finishCurrentScene();
+			if (getElapsedTime() >= step1ShowPictureList.size() * sleepTime)
+				ShowChapters.getInstance().finishCurrentScene();
 		}
         
     }
@@ -179,8 +179,8 @@ public class AnimalmemoryTest extends ChildDevBaseTest {
 	private class Instruction2 extends ChildDevBaseLayer {
 		float yy = 0;
 
-		public Instruction2(ChildDevBaseTest test) {
-			super(test);
+		public Instruction2() {
+			super();
 			isTouchEnabled_ = true;
 			MyLog.v(LOG_TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
 
@@ -217,8 +217,8 @@ public class AnimalmemoryTest extends ChildDevBaseTest {
 		@Override
 		public void update(float d) {
 			super.update(d);
-			if (getTimeElapsed() >= 4.0f)
-				getBundle().finishCurrentScene();
+			if (getElapsedTime() >= 4.0f)
+				ShowChapters.getInstance().finishCurrentScene();
 		}
 	}	
 
