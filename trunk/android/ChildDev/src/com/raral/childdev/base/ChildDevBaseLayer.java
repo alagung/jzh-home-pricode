@@ -16,26 +16,26 @@ import org.cocos2d.utils.pool.OneClassPool;
 
 public class ChildDevBaseLayer extends CCLayer implements UpdateCallback {
 	public class SimpleActor {
-		public float mStartTime;
-		public float mEndTime;
 		public CCNode mNode;
-		public CCAction mAction;
-		public boolean mRunning;
-		public SimpleActor(float startTime, CCNode node, float endTime, CCAction action) {
-			super();
-			this.mStartTime = startTime;
+		public float mStartTime;
+		public float mEndTime = 0.0f;
+		public CCAction mAction = null;
+		public boolean mRunning = false;
+		
+		public SimpleActor(CCNode node, float startTime, float endTime, CCAction action) {
+			this(node, startTime, action);
 			this.mEndTime = endTime;
-			this.mNode = node;
-			this.mAction = action;
-			this.mRunning = false;
 		}
-		public SimpleActor(float startTime, CCNode node, CCAction action) {
-			super();
-			this.mStartTime = startTime;
-			this.mNode = node;
+		
+		public SimpleActor(CCNode node, float startTime, CCAction action) {
+			this(node, startTime);
 			this.mAction = action;
-			this.mEndTime = 0.0f;
-			this.mRunning = false;
+		}
+		
+		public SimpleActor(CCNode node, float startTime) {
+			super();
+			this.mNode = node;
+			this.mStartTime = startTime;
 		}
 		
 	}
@@ -105,8 +105,8 @@ public class ChildDevBaseLayer extends CCLayer implements UpdateCallback {
 		mSimpleActors.add(actor);
 	}
 	
-	public SimpleActor addSimpleAct(float sTime, CCNode node, CCAction act) {
-		SimpleActor a = new SimpleActor(sTime, node, act);
+	public SimpleActor addSimpleAct(CCNode node, float sTime, CCAction act) {
+		SimpleActor a = new SimpleActor(node, sTime, act);
 		mSimpleActors.add(a);
 		return a;	
 	}

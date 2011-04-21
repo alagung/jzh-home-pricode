@@ -63,7 +63,7 @@ public class AirsearchTest extends ChildDevBaseChapter {
 			hint.setAnchorPoint(0.5f, 1.0f);
 			hint.setPosition(CGPoint.make(s.width / 2, yy));
 	        hint.setOpacity(0);
-	        addSimpleAct(sTime, hint, CCSequence.actions(
+	        addSimpleAct(hint, sTime, CCSequence.actions(
 	        		CCFadeIn.action(1), CCFiniteTimeAction.action(3), CCFadeOut.action(2)));
 	        yy = hint.getPositionRef().y - hint.getContentSizeRef().height - 20;
 		}
@@ -79,7 +79,7 @@ public class AirsearchTest extends ChildDevBaseChapter {
 			sample = CCSprite.sprite("grossini.png");
 			sample.setPosition(s.width / 2, s.height / 2);
 			sample.setOpacity(0);
-			addSimpleAct(2.0f, sample, CCFadeIn.action(1.5f));
+			addSimpleAct(sample, 2.0f, CCFadeIn.action(1.5f));
 		}
 		
 		@Override

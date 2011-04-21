@@ -64,7 +64,7 @@ public class AnimalsSelectLayer extends NodeEventLayer {
 			int x = (i % (picturesALine-1)) * w + ox;
 			int y = (i / (picturesALine-1)) * h + oy;
 			MyLog.v(LOG_TAG, String.format("i:%d, x:%d, y:%d", i, x, y));
-			addSimpleAct(1.0f, new AnimalSprite(pic, x, y, pic), null);
+			addSimpleAct(new AnimalSprite(pic, x, y, pic), 1.0f, null);
 		}
         
         score = CCLabel.makeLabel("ตรทึ: 0", "DroidSans", 18);

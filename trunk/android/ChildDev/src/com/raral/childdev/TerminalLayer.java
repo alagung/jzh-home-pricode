@@ -48,7 +48,7 @@ public class TerminalLayer extends ChildDevBaseLayer {
         CCSprite report = new CCSprite("grossini.png");
         report.setAnchorPoint(0.5f, 1.0f);
         report.setPosition(s.width / 2, yy);
-		addSimpleAct(1.0f, report, CCRepeatForever.action(CCAnimate.action(animation)));
+		addSimpleAct(report, 1.0f, CCRepeatForever.action(CCAnimate.action(animation)));
 	}
 
 	@Override

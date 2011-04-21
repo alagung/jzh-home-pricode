@@ -26,12 +26,12 @@ public class AirsearchLayer extends NodeEventLayer {
         hint.setAnchorPoint(0.5f, 1.0f);
         hint.setPosition(CGPoint.make(s.width / 2, s.height - 60));
         hint.setOpacity(0);
-        addSimpleAct(0.0f, hint, CCSequence.actions(
+        addSimpleAct(hint, 0.0f, CCSequence.actions(
         		CCFadeIn.action(1), CCFiniteTimeAction.action(3), CCFadeOut.action(2)));
 
-        addSimpleAct(1.0f, new PlaneSprite("grossini.png", 20, s.height/2, 60, 0, "1"), null);
-        addSimpleAct(1.0f, new PlaneSprite("grossini.png", 80, s.height/2, 60, 0, "2"), null);
-        addSimpleAct(1.0f, new PlaneSprite("grossini.png", 160, s.height/2, 60, 0, "3"), null);
+        addSimpleAct(new PlaneSprite("grossini.png", 20, s.height/2, 60, 0, "1"), 1.0f, null);
+        addSimpleAct(new PlaneSprite("grossini.png", 80, s.height/2, 60, 0, "2"), 1.0f, null);
+        addSimpleAct(new PlaneSprite("grossini.png", 160, s.height/2, 60, 0, "3"), 1.0f, null);
         
         score = CCLabel.makeLabel("ตรทึ: 0", "DroidSans", 24);
         score.setAnchorPoint(1.0f, 1.0f);
