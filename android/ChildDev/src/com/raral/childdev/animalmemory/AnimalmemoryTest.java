@@ -3,6 +3,7 @@ package com.raral.childdev.animalmemory;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cocos2d.actions.base.CCAction;
 import org.cocos2d.actions.base.CCFiniteTimeAction;
 import org.cocos2d.actions.interval.CCFadeIn;
 import org.cocos2d.actions.interval.CCFadeOut;
@@ -10,6 +11,7 @@ import org.cocos2d.actions.interval.CCSequence;
 import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
+import org.cocos2d.nodes.CCNode;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
 
@@ -77,6 +79,33 @@ public class AnimalmemoryTest extends ChildDevBaseChapter {
 		return sceneList;
 	}
 	
+	public class SimpleSlide {
+		public String mPicture;
+		public float mX = 0;
+		public float mY = 0;
+		public float mStartTime = 0.0f;
+		public float mEndTime = 0.0f;
+		public CCAction mAction = null;
+		public boolean mRunning = false;
+		
+		public SimpleSlide(String picture, float x, float y, float startTime, float endTime, CCAction action) {
+			this(picture, x, y, startTime, action);
+			mEndTime = endTime;
+		}
+		public SimpleSlide(String picture, float x, float y, float startTime, CCAction action) {
+			this(picture, x, y, startTime);
+			mAction = action;
+		}
+		
+		public SimpleSlide(String picture, float x, float y, float startTime) {
+			super();
+			mPicture = picture;
+			mStartTime = startTime;
+			mX = x;
+			mY = y;
+		}
+	}
+	
 	private class Instruction1 extends ChildDevBaseLayer {
 		float yy = 0;
 
@@ -100,7 +129,7 @@ public class AnimalmemoryTest extends ChildDevBaseChapter {
 			hint.setAnchorPoint(0.5f, 1.0f);
 			hint.setPosition(CGPoint.make(s.width / 2, yy));
 	        hint.setOpacity(0);
-	        addSimpleAct(sTime, hint, CCSequence.actions(
+	        addSimpleAct(hint, sTime, CCSequence.actions(
 	        		CCFadeIn.action(1), CCFiniteTimeAction.action(3), CCFadeOut.action(2)));
 	        yy = hint.getPositionRef().y - hint.getContentSizeRef().height - 20;
 		}
@@ -148,6 +177,10 @@ public class AnimalmemoryTest extends ChildDevBaseChapter {
 			// change the transform anchor point (optional)
 			background.setAnchorPoint(CGPoint.make(0, 0));
 			addChild(background, 0);
+			
+			for(int i=0; i<pictureNumber; i++){
+				new SimpleSlide(step1ShowPictureList.get(i), animalPictureX, animalPictureY, (i+1)*sleepTime);
+			}
 
         }
         
@@ -211,7 +244,7 @@ public class AnimalmemoryTest extends ChildDevBaseChapter {
 			hint.setAnchorPoint(0.5f, 1.0f);
 			hint.setPosition(CGPoint.make(s.width / 2, yy));
 	        hint.setOpacity(0);
-	        addSimpleAct(sTime, hint, CCSequence.actions(
+	        addSimpleAct(hint, sTime, CCSequence.actions(
 	        		CCFadeIn.action(1), CCFiniteTimeAction.action(3), CCFadeOut.action(2)));
 	        yy = hint.getPositionRef().y - hint.getContentSizeRef().height - 20;
 		}
