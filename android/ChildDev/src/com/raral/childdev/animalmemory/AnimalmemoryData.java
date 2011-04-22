@@ -25,8 +25,8 @@ public class AnimalmemoryData {
 	private static final int STEP1_SHOWPICTURES = 8;
 	private static final int STEP2_APPEARED = 5;
 	private static final int STEP2_UNAPPEARED = 5;
-	private static final int PICTURE_WIDTH = 350;
-	private static final int PICTURE_HEIGHT = 350;
+	private static final int PICTURE_WIDTH = 64;
+	private static final int PICTURE_HEIGHT = 64;
 	private List<Integer> pictureGroupList = new ArrayList<Integer>();
 	private List<String> PictureList = new ArrayList<String>();
 	private List<String> step1ShowPictureList = new ArrayList<String>();

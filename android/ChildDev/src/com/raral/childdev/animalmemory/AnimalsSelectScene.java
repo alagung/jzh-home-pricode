@@ -12,13 +12,12 @@ import android.view.MotionEvent;
 
 import com.raral.childdev.Report;
 import com.raral.childdev.ShowChapters;
-import com.raral.childdev.base.ChildDevBaseChapter;
 import com.raral.childdev.base.NodeEventLayer;
 import com.raral.childdev.base.NodeEventSprite;
 import com.raral.childdev.util.MyLog;
 import com.raral.childdev.util.Tools;
 
-public class AnimalsSelectLayer extends NodeEventLayer {
+public class AnimalsSelectScene extends NodeEventLayer {
 	private static final String LOG_TAG = "AnimalSelectLayer";
 	CCLabel score;
 	CCLabel time;
@@ -33,7 +32,7 @@ public class AnimalsSelectLayer extends NodeEventLayer {
 	int picturesPadding = 20; // pixel
 	int scoreTextHeight = 20;
 
-	public AnimalsSelectLayer() {
+	public AnimalsSelectScene() {
 		super();
 		MyLog.v(LOG_TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
 		

@@ -10,4 +10,12 @@ public class Tools {
 	public static String getString(int resId){
 		return CCDirector.sharedDirector().getActivity().getString(resId);
 	}
+	
+	public static float getScreenWidth(){
+		return CCDirector.sharedDirector().winSize().width;
+	}
+
+	public static float getScreenHeight(){
+		return CCDirector.sharedDirector().winSize().height;
+	}
 }

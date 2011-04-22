@@ -2,11 +2,17 @@ package com.raral.childdev.base;
 
 import java.util.ArrayList;
 
+import org.cocos2d.layers.CCLayer;
 import org.cocos2d.layers.CCScene;
+import com.raral.childdev.airsearch.AirsearchTest.*;
+import com.raral.childdev.animalmemory.AnimalmemoryTest.*;
+
+import com.raral.childdev.util.MyLog;
 
 abstract public class ChildDevBaseChapter {
+	private static final String LOG_TAG = "ChildDevBaseChapter";
 	private int mNextScene = 0;
-	public ArrayList<CCScene> mScenes = null;
+	public ArrayList<Class<?>> mScenes = null;
 	public int mScore = 0;
 	public boolean mIsLoaded = false;
 	
@@ -29,7 +35,7 @@ abstract public class ChildDevBaseChapter {
 
 	abstract public String getDesc();
 
-	abstract public ArrayList<CCScene> loadScenes();
+	abstract public ArrayList<Class<?>> loadScenes();
 
 	public void load() {
 		mScenes = loadScenes();
@@ -45,7 +51,15 @@ abstract public class ChildDevBaseChapter {
 	}
 
 	public CCScene nextScene() {
-		return mScenes.get(mNextScene++);
+		MyLog.v(LOG_TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
+		try {
+            Class<?> c = mScenes.get(mNextScene++);
+            CCScene s = CCScene.node();
+    		s.addChild((CCLayer) c.newInstance());
+    		return s;
+        } catch (Exception e) {
+            return null;
+        }
 	}
 
 	public void resetScene() {
