@@ -12,13 +12,13 @@ import org.cocos2d.types.CGSize;
 import com.raral.childdev.ShowChapters;
 import com.raral.childdev.base.NodeEventLayer;
 
-public class AirsearchLayer extends NodeEventLayer {
+public class AirsearchScene extends NodeEventLayer {
 	CCLabel score;
 	CCLabel time;
 	
 	float remain = 15.0f;
 	
-	public AirsearchLayer() {
+	public AirsearchScene() {
 		super();
 		CGSize s = CCDirector.sharedDirector().winSize();
 		

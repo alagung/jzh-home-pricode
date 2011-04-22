@@ -23,19 +23,19 @@ public class ChildDevBaseLayer extends CCLayer implements UpdateCallback {
 		public boolean mRunning = false;
 		
 		public SimpleActor(CCNode node, float startTime, float endTime, CCAction action) {
-			this(node, startTime, action);
-			this.mEndTime = endTime;
+			mNode = node;
+			mStartTime = startTime;
+			mEndTime = endTime;
+			mAction = action;
+			mEndTime = endTime;
 		}
 		
 		public SimpleActor(CCNode node, float startTime, CCAction action) {
-			this(node, startTime);
-			this.mAction = action;
+			this(node, startTime, 0.0f, action);
 		}
 		
 		public SimpleActor(CCNode node, float startTime) {
-			super();
-			this.mNode = node;
-			this.mStartTime = startTime;
+			this(node, startTime, 0.0f, null);
 		}
 		
 	}
