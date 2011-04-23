@@ -19,11 +19,14 @@ public class SlideSprite extends CCNode implements UpdateCallback {
 	private float mElapsedTime = 0.0f;
 	private int mActorIndex = 0;
 	private ChildBaseSprite pictureSprite = null;
+	
+	public CCNode mNode = null;
 	public boolean mRunning = false;
 
 	ArrayList<Actor> mActors = new ArrayList<Actor>();
 	
-	public SlideSprite(float x, float y, int z, float duration) {
+	public SlideSprite(CCNode node, float x, float y, int z, float duration) {
+		mNode = node;
 		mX = x;
 		mY = y;
 		mZ = z;
@@ -49,7 +52,7 @@ public class SlideSprite extends CCNode implements UpdateCallback {
 	public void cleanUp() {
 		if(pictureSprite != null) {
     		pictureSprite.stopAllActions();
-    		removeChild(pictureSprite, true);
+    		mNode.removeChild(pictureSprite, true);
     	}
 		mActors.clear();
 	}
@@ -64,11 +67,11 @@ public class SlideSprite extends CCNode implements UpdateCallback {
 			MyLog.v(LOG_TAG, "pic: " + act.mPicture);
 			if(pictureSprite != null) {
 	    		pictureSprite.stopAllActions();
-	    		removeChild(pictureSprite, true);
+	    		mNode.removeChild(pictureSprite, true);
 	    	}
 
         	pictureSprite = new ChildBaseSprite(act.mPicture);
-			addChild(pictureSprite, mZ);
+        	mNode.addChild(pictureSprite, mZ);
 			pictureSprite.setPosition(CGPoint.make(mX, mY));
 			if (act.mAction != null)
 				pictureSprite.runAction(act.mAction);

@@ -29,12 +29,6 @@ public class ChildDevMain extends Activity{
         mGLSurfaceView = new CCGLSurfaceView(this);
         handler = new Handler();
         setContentView(mGLSurfaceView);
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
 
         // attach the OpenGL view to a window
         CCDirector.sharedDirector().attachInView(mGLSurfaceView);
@@ -49,6 +43,13 @@ public class ChildDevMain extends Activity{
         CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
         ShowChapters.getInstance().start();
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
     }
 
     @Override

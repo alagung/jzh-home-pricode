@@ -20,13 +20,13 @@ public class AnimalmemoryData {
 	private static final String PICTURE_SUFFIX = ".png";
 	private static final String BACKGROUND_PICTURE = "bg.png";
 	private static final int TOTAL_PICTUREGROUPS = 1;
-	private static final int TOTAL_PICTURES = 11;
+	private static final int TOTAL_PICTURES = 20;
 	private static final int STEP1_SLEEPTIME = 2; //unit second.
 	private static final int STEP1_SHOWPICTURES = 8;
 	private static final int STEP2_APPEARED = 5;
 	private static final int STEP2_UNAPPEARED = 5;
-	private static final int PICTURE_WIDTH = 64;
-	private static final int PICTURE_HEIGHT = 64;
+	private static final int PICTURE_WIDTH = 350;
+	private static final int PICTURE_HEIGHT = 350;
 	private List<Integer> pictureGroupList = new ArrayList<Integer>();
 	private List<String> PictureList = new ArrayList<String>();
 	private List<String> step1ShowPictureList = new ArrayList<String>();

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import org.cocos2d.layers.CCLayer;
 import org.cocos2d.layers.CCScene;
-import com.raral.childdev.airsearch.AirsearchTest.*;
-import com.raral.childdev.animalmemory.AnimalmemoryTest.*;
 
 import com.raral.childdev.util.MyLog;
 

@@ -47,8 +47,8 @@ public class AnimalsSelectScene extends NodeEventLayer {
 		if(step2ShowPictureList.size() < picturesALine)
 			picturesALine = step2ShowPictureList.size();
 		
-		float wScale = (s.width - originX) / ((pictureWidth+picturesPadding)*picturesALine);
-		float hScale = (s.height -  originY - scoreTextHeight) / ((pictureHeight+picturesPadding)*pictureLines);	
+		float wScale = (s.width - originX) / ((pictureWidth)*picturesALine);
+		float hScale = (s.height -  originY - scoreTextHeight) / ((pictureHeight)*pictureLines);	
 		scale = (wScale < hScale)? wScale : hScale;
 
 		int ox = originX;  // begin point
@@ -60,8 +60,8 @@ public class AnimalsSelectScene extends NodeEventLayer {
 		for( int i=0; i<step2ShowPictureList.size(); i++) {
 			String pic = step2ShowPictureList.get(i);
 			MyLog.v(LOG_TAG, "pic: " + pic);
-			int x = (i % (picturesALine-1)) * w + ox;
-			int y = (i / (picturesALine-1)) * h + oy;
+			int x = (i % picturesALine) * w + ox;
+			int y = (i / picturesALine) * h + oy;
 			MyLog.v(LOG_TAG, String.format("i:%d, x:%d, y:%d", i, x, y));
 			addSimpleAct(new AnimalSprite(pic, x, y, pic), 1.0f, null);
 		}
