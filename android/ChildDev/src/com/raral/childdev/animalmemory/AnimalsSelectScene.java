@@ -2,11 +2,8 @@ package com.raral.childdev.animalmemory;
 
 import java.util.List;
 
-
-import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.types.CGPoint;
-import org.cocos2d.types.CGSize;
 
 import android.view.MotionEvent;
 
@@ -25,11 +22,11 @@ public class AnimalsSelectScene extends NodeEventLayer {
 	List<String> step2ShowPictureList;
 	int selectNumber = 0;
 	int step2InStep1Number = 0;
-	float scale = 0.5f;  // for drawing picture
-	int originX = 60;
-	int originY = 60;
+	float scale = 1.0f;  // for drawing picture
 	int picturesALine = 5; // show 5 pictures a line
-	int picturesPadding = 20; // pixel
+	float picturesPadding = 30; // pixel
+	float picDisplayWidth = 0;
+	float picDisplayHeight = 0;
 	int scoreTextHeight = 20;
 
 	public AnimalsSelectScene() {
@@ -38,46 +35,46 @@ public class AnimalsSelectScene extends NodeEventLayer {
 		
 		step2ShowPictureList = AnimalmemoryTest.mAnimalMemoryData.getStep2ShowPictureList();
 		step2InStep1Number = AnimalmemoryTest.mAnimalMemoryData.getStep2InStep1Number();
-		int pictureWidth = AnimalmemoryTest.mAnimalMemoryData.getPictureWidth();
-		int pictureHeight = AnimalmemoryTest.mAnimalMemoryData.getPictureHeight();
-		
-		CGSize s = CCDirector.sharedDirector().winSize();
-		
-		int pictureLines = Tools.getFullInteger(step2ShowPictureList.size() / picturesALine);
-		if(step2ShowPictureList.size() < picturesALine)
-			picturesALine = step2ShowPictureList.size();
-		
-		float wScale = (s.width - originX) / ((pictureWidth)*picturesALine);
-		float hScale = (s.height -  originY - scoreTextHeight) / ((pictureHeight)*pictureLines);	
-		scale = (wScale < hScale)? wScale : hScale;
 
-		int ox = originX;  // begin point
-		int oy = originY; 
-		int w = Tools.getFullInteger((pictureWidth + picturesPadding) * scale);
-		int h = Tools.getFullInteger((pictureHeight + picturesPadding) * scale);
-		MyLog.v(LOG_TAG, String.format("scale:%f, ox:%d, oy:%d, w:%d, h:%d, sw:%f, sh:%f", scale, ox, oy, w, h, s.width, s.height));
+		getPictureScale();
+
+		MyLog.v(LOG_TAG, String.format("scale:%f, w:%f, h:%f, padding:%f", scale, picDisplayWidth, picDisplayHeight, picturesPadding));
 		
 		for( int i=0; i<step2ShowPictureList.size(); i++) {
 			String pic = step2ShowPictureList.get(i);
 			MyLog.v(LOG_TAG, "pic: " + pic);
-			int x = (i % picturesALine) * w + ox;
-			int y = (i / picturesALine) * h + oy;
-			MyLog.v(LOG_TAG, String.format("i:%d, x:%d, y:%d", i, x, y));
+			float x = (i % picturesALine) * picDisplayWidth + picturesPadding;
+			float y = (i / picturesALine) * picDisplayHeight + picturesPadding;
+			MyLog.v(LOG_TAG, String.format("i:%d, x:%f, y:%f", i, x, y));
 			addSimpleAct(new AnimalSprite(pic, x, y, pic), 1.0f, null);
 		}
         
         score = CCLabel.makeLabel("得分: 0", "DroidSans", 18);
         score.setAnchorPoint(1.0f, 1.0f);
-        score.setPosition(CGPoint.make(s.width - 20, s.height - scoreTextHeight));
+        score.setPosition(CGPoint.make(Tools.getScreenWidth() - 20, Tools.getScreenHeight() - scoreTextHeight));
         addChild(score);
         
         time = CCLabel.makeLabel("时间剩余: 30秒", "DroidSans", 18);
         time.setAnchorPoint(0.0f, 1.0f);
-        time.setPosition(CGPoint.make(20, s.height - scoreTextHeight));
+        time.setPosition(CGPoint.make(20, Tools.getScreenHeight() - scoreTextHeight));
         addChild(time);
 	}
 
-
+	private void getPictureScale() {
+		picturesPadding *= Tools.getSizeScale();
+		if(step2ShowPictureList.size() < picturesALine)
+			picturesALine = step2ShowPictureList.size();
+		
+		picDisplayWidth = (Tools.getScreenWidth() - picturesPadding*(picturesALine+1)) / picturesALine;
+		int pictureLines = Tools.getFullInteger(step2ShowPictureList.size() / picturesALine);
+		picDisplayHeight = (Tools.getScreenHeight() - scoreTextHeight - picturesPadding*(pictureLines+1)) / pictureLines;
+		
+		float wScale = picDisplayWidth / AnimalmemoryTest.mAnimalMemoryData.getPictureWidth();
+		float hScale = picDisplayHeight / AnimalmemoryTest.mAnimalMemoryData.getPictureHeight();	
+		scale = (wScale > hScale)? wScale : hScale;
+	
+	}
+	
 	@Override
 	public void onEnter() {
 		super.onEnter();
