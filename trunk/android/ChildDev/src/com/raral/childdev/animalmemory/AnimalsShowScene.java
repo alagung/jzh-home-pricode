@@ -33,7 +33,7 @@ public class AnimalsShowScene extends ChildDevBaseLayer {
 		background.setAnchorPoint(CGPoint.make(0, 0));
 		addChild(background, 0);
 		
-		animals = new SlideSprite(Tools.getScreenWidth()/2, Tools.getScreenHeight()/3, 1, duration);
+		animals = new SlideSprite(this, Tools.getScreenWidth()/2, Tools.getScreenHeight()/3, 1, duration);
 		for(int i=0; i<step1ShowPictureList.size(); i++){
 			animals.addActor(step1ShowPictureList.get(i));
 		}
