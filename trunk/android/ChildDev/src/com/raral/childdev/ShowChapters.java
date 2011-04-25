@@ -55,6 +55,12 @@ public class ShowChapters {
 		setCurrent(chaptersIndex);
 		start();
 	}
+	
+	public void clean() {
+		mChapters = null;
+		mChaptersIndex = 0;
+		mCurrentChapter = null;
+	}
 
 	public ChildDevBaseChapter getCurrentChapter() {
 		return mCurrentChapter;

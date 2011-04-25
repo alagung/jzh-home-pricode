@@ -42,7 +42,6 @@ public class AnimalsSelectScene extends NodeEventLayer {
 		
 		for( int i=0; i<step2ShowPictureList.size(); i++) {
 			String pic = step2ShowPictureList.get(i);
-			MyLog.v(LOG_TAG, "pic: " + pic);
 			float x = (i % picturesALine) * picDisplayWidth + picturesPadding;
 			float y = (i / picturesALine) * picDisplayHeight + picturesPadding;
 			MyLog.v(LOG_TAG, String.format("i:%d, x:%f, y:%f", i, x, y));
@@ -54,7 +53,7 @@ public class AnimalsSelectScene extends NodeEventLayer {
         score.setPosition(CGPoint.make(Tools.getScreenWidth() - 20, Tools.getScreenHeight() - scoreTextHeight));
         addChild(score);
         
-        time = CCLabel.makeLabel("时间剩余: 30秒", "DroidSans", 18);
+        time = CCLabel.makeLabel("时间剩余: 60秒", "DroidSans", 18);
         time.setAnchorPoint(0.0f, 1.0f);
         time.setPosition(CGPoint.make(20, Tools.getScreenHeight() - scoreTextHeight));
         addChild(time);
@@ -71,7 +70,7 @@ public class AnimalsSelectScene extends NodeEventLayer {
 		
 		float wScale = picDisplayWidth / AnimalmemoryTest.mAnimalMemoryData.getPictureWidth();
 		float hScale = picDisplayHeight / AnimalmemoryTest.mAnimalMemoryData.getPictureHeight();	
-		scale = (wScale > hScale)? wScale : hScale;
+		scale = (wScale < hScale)? wScale : hScale;
 	
 	}
 	
@@ -91,9 +90,9 @@ public class AnimalsSelectScene extends NodeEventLayer {
 			remain = 0;
 		time.setString("时间剩余: "+(int)remain+"秒");
 		
-		if (curScore >= 3) {
-			if (remain > 1.0f)
-				remain = 1.0f;
+		if (selectNumber >= step2InStep1Number) {
+			if (remain > 2.0f)
+				remain = 2.0f;
 		}
 		
 		if (remain <= 0.0f) {
@@ -109,12 +108,12 @@ public class AnimalsSelectScene extends NodeEventLayer {
 		
 		@Override
 		public boolean ccTouchesBegan(MotionEvent event) {
-			if(selectNumber < step2InStep1Number){
+			selectNumber++;
+			if(selectNumber <= step2InStep1Number){
 				if(AnimalmemoryTest.mAnimalMemoryData.getStep1ShowPictureList().contains(this.name)) {
 					ShowChapters.getInstance().getCurrentChapter().mScore += 1;	
 					Report.animalmemory_score++;
 				}
-				selectNumber++;
 				stopAllActions();
 				removeAllChildren(true);
 				getParent().removeChild(this, true);
@@ -125,6 +124,7 @@ public class AnimalsSelectScene extends NodeEventLayer {
 		@Override
 		public void onEnter() {
 			super.onEnter();
+			setAnchorPoint(0.0f, 0.0f);
 			setPosition(CGPoint.make(x, y));
 		}
 

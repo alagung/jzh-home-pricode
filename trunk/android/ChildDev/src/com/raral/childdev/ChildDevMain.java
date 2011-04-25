@@ -70,8 +70,13 @@ public class ChildDevMain extends Activity{
     public void onDestroy() {
         super.onDestroy();
 
+        ShowChapters.getInstance().clean();
+        
         CCDirector.sharedDirector().end();
         CCTextureCache.sharedTextureCache().removeAllTextures();
         CCSpriteFrameCache.sharedSpriteFrameCache().removeAllSpriteFrames();
+        
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(0); 
     }
 }

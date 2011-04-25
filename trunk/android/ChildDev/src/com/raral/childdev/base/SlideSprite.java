@@ -49,7 +49,7 @@ public class SlideSprite extends CCNode implements UpdateCallback {
 		mActors.add(a);
 	}
 	
-	public void cleanUp() {
+	public void clean() {
 		if(pictureSprite != null) {
     		pictureSprite.stopAllActions();
     		mNode.removeChild(pictureSprite, true);
