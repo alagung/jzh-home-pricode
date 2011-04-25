@@ -3,6 +3,8 @@ package com.raral.childdev.util;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.types.CGSize;
 
+import android.util.DisplayMetrics;
+
 import com.raral.childdev.Config;
 
 public class Tools {
@@ -43,9 +45,18 @@ public class Tools {
 		return mSizeScale;
 	}
 	
+	public static int getFontSize(int fontSize) {
+		int retfontSize = getFullInteger(fontSize * getSizeScale());
+		MyLog.v(LOG_TAG, String.format("getFontSize, size:%d", retfontSize));
+		return retfontSize;
+	}
+	
 	private static void getSize() {
 		if(mSize == null) {
 			mSize = CCDirector.sharedDirector().winSize();
+			DisplayMetrics metric = new DisplayMetrics();
+			CCDirector.sharedDirector().getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
+			MyLog.v(LOG_TAG, String.format("getSize, w:%d, h:%d", metric.widthPixels, metric.heightPixels));
 		}
 	}
 	

@@ -51,7 +51,7 @@ public class AnimalsShowScene extends ChildDevBaseLayer {
 		animals.update(d);
 
 		if (getElapsedTime() > endTime){
-			animals.cleanUp();
+			animals.clean();
 			ShowChapters.getInstance().finishCurrentScene();
 		}
 	}

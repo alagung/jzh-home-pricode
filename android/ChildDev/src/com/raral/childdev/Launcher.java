@@ -5,13 +5,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.cocos2d.nodes.CCDirector;
+
 import com.raral.childdev.R;
+import com.raral.childdev.util.MyLog;
 
 
 
 import android.app.ExpandableListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -21,7 +25,7 @@ import android.widget.SimpleExpandableListAdapter;
 
 
 public class Launcher extends ExpandableListActivity {
-	
+	private static final String LOG_TAG = "Launcher";
     private static final String KEY = "KEY";
     
 	private ExpandableListAdapter adapter;
@@ -49,6 +53,9 @@ public class Launcher extends ExpandableListActivity {
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.requestFullScreen();
+		DisplayMetrics metric = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metric);
+		MyLog.v(LOG_TAG, String.format("onCreate, w:%d, h:%d", metric.widthPixels, metric.heightPixels));
 
 		for (int i = 0; i < groupNames.length; i++) {
 			String groupName = groupNames[i];

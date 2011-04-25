@@ -36,7 +36,7 @@ public class Instruction1Scene extends ChildDevBaseLayer {
 		if (yy == 0)
 			yy = s.height - 60;
 		
-		CCLabel hint = CCLabel.makeLabel(text, "DroidSans", 16);
+		CCLabel hint = CCLabel.makeLabel(text, "DroidSans", Tools.getFontSize(22));
 		hint.setAnchorPoint(0.5f, 1.0f);
 		hint.setPosition(CGPoint.make(s.width / 2, yy));
         hint.setOpacity(0);
@@ -47,14 +47,12 @@ public class Instruction1Scene extends ChildDevBaseLayer {
 	
 	@Override
 	public void onEnter() {
-		super.onEnter();	
-		MyLog.v(LOG_TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
+		super.onEnter();
 	}
 	
 	@Override
 	public void update(float d) {
 		super.update(d);
-		MyLog.v(LOG_TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
 		if (getElapsedTime() >= 8.0f)
 			ShowChapters.getInstance().finishCurrentScene();
 	}
