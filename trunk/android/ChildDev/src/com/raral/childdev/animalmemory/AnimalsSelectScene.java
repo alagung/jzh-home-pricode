@@ -1,14 +1,17 @@
 package com.raral.childdev.animalmemory;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.cocos2d.nodes.CCLabel;
+import org.cocos2d.nodes.CCNode;
 import org.cocos2d.types.CGPoint;
 
 import android.view.MotionEvent;
 
 import com.raral.childdev.Report;
 import com.raral.childdev.ShowChapters;
+import com.raral.childdev.base.ChildBaseSprite;
 import com.raral.childdev.base.NodeEventLayer;
 import com.raral.childdev.base.NodeEventSprite;
 import com.raral.childdev.util.MyLog;
@@ -16,61 +19,69 @@ import com.raral.childdev.util.Tools;
 
 public class AnimalsSelectScene extends NodeEventLayer {
 	private static final String LOG_TAG = "AnimalSelectLayer";
-	CCLabel score;
-	CCLabel time;
-	float remain = 60.0f;
-	List<String> step2ShowPictureList;
-	int selectNumber = 0;
-	int step2InStep1Number = 0;
-	float scale = 1.0f;  // for drawing picture
-	int picturesALine = 5; // show 5 pictures a line
-	float picturesPadding = 30; // pixel
-	float picDisplayWidth = 0;
-	float picDisplayHeight = 0;
-	int scoreTextHeight = 20;
+	CCLabel mScore;
+	CCLabel mTime;
+	float mRemain = 60.0f;
+	List<String> mStep2ShowPictureList;
+	int mSelectNumber = 0;
+	int mStep2InStep1Number = 0;
+	float mScale = 1.0f;  // for drawing picture
+	int mPicturesALine = 4; // show 5 pictures a line
+	float mPicturesPadding = 30; // pixel
+	float mPicDisplayWidth = 0;
+	float mPicDisplayHeight = 0;
+	int mScoreTextHeight = 20;
+	CCNode mNode = null;
+	HashMap<String, PicPostion> picturesPostion = new HashMap<String, PicPostion>();
 
 	public AnimalsSelectScene() {
 		super();
+		mNode = this;
 		MyLog.v(LOG_TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
 		
-		step2ShowPictureList = AnimalmemoryTest.mAnimalMemoryData.getStep2ShowPictureList();
-		step2InStep1Number = AnimalmemoryTest.mAnimalMemoryData.getStep2InStep1Number();
+		mStep2ShowPictureList = AnimalmemoryTest.mAnimalMemoryData.getStep2ShowPictureList();
+		mStep2InStep1Number = AnimalmemoryTest.mAnimalMemoryData.getStep2InStep1Number();
 
 		getPictureScale();
 
-		MyLog.v(LOG_TAG, String.format("scale:%f, w:%f, h:%f, padding:%f", scale, picDisplayWidth, picDisplayHeight, picturesPadding));
+		MyLog.v(LOG_TAG, String.format("mScale:%f, w:%f, h:%f, padding:%f", mScale, mPicDisplayWidth, mPicDisplayHeight, mPicturesPadding));
 		
-		for( int i=0; i<step2ShowPictureList.size(); i++) {
-			String pic = step2ShowPictureList.get(i);
-			float x = (i % picturesALine) * picDisplayWidth + picturesPadding;
-			float y = (i / picturesALine) * picDisplayHeight + picturesPadding;
+		for( int i=0; i<mStep2ShowPictureList.size(); i++) {
+			String pic = mStep2ShowPictureList.get(i);
+			float x = (i % mPicturesALine) * mPicDisplayWidth + mPicturesPadding;
+			float y = (i / mPicturesALine) * mPicDisplayHeight + mPicturesPadding;
 			MyLog.v(LOG_TAG, String.format("i:%d, x:%f, y:%f", i, x, y));
-			addSimpleAct(new AnimalSprite(pic, x, y, pic), 1.0f, null);
+			picturesPostion.put(pic, new PicPostion(x, y));
+//			addSimpleAct(new AnimalSprite(pic, x, y, pic), 1.0f, null);
+			AnimalSprite anims = new AnimalSprite(pic, x, y, pic);
+			anims.setAnchorPoint(0, 0);
+			anims.setPosition(CGPoint.make(x, y));
+			mNode.addChild(anims, 0);
 		}
         
-        score = CCLabel.makeLabel("得分: 0", "DroidSans", 18);
-        score.setAnchorPoint(1.0f, 1.0f);
-        score.setPosition(CGPoint.make(Tools.getScreenWidth() - 20, Tools.getScreenHeight() - scoreTextHeight));
-        addChild(score);
+        mScore = CCLabel.makeLabel("得分: 0", "DroidSans", 18);
+        mScore.setAnchorPoint(1.0f, 1.0f);
+        mScore.setPosition(CGPoint.make(Tools.getScreenWidth() - 20, Tools.getScreenHeight() - mScoreTextHeight));
+        mNode.addChild(mScore, 0);
         
-        time = CCLabel.makeLabel("时间剩余: 60秒", "DroidSans", 18);
-        time.setAnchorPoint(0.0f, 1.0f);
-        time.setPosition(CGPoint.make(20, Tools.getScreenHeight() - scoreTextHeight));
-        addChild(time);
+        mTime = CCLabel.makeLabel("时间剩余: 60秒", "DroidSans", 18);
+        mTime.setAnchorPoint(0.0f, 1.0f);
+        mTime.setPosition(CGPoint.make(20, Tools.getScreenHeight() - mScoreTextHeight));
+        mNode.addChild(mTime, 0);
 	}
 
 	private void getPictureScale() {
-		picturesPadding *= Tools.getSizeScale();
-		if(step2ShowPictureList.size() < picturesALine)
-			picturesALine = step2ShowPictureList.size();
+		mPicturesPadding *= Tools.getSizeScale();
+		if(mStep2ShowPictureList.size() < mPicturesALine)
+			mPicturesALine = mStep2ShowPictureList.size();
 		
-		picDisplayWidth = (Tools.getScreenWidth() - picturesPadding*(picturesALine+1)) / picturesALine;
-		int pictureLines = Tools.getFullInteger(step2ShowPictureList.size() / picturesALine);
-		picDisplayHeight = (Tools.getScreenHeight() - scoreTextHeight - picturesPadding*(pictureLines+1)) / pictureLines;
+		mPicDisplayWidth = (Tools.getScreenWidth() - mPicturesPadding*(mPicturesALine+1)) / mPicturesALine;
+		int pictureLines = Tools.getFullInteger(mStep2ShowPictureList.size() / mPicturesALine);
+		mPicDisplayHeight = (Tools.getScreenHeight() - mScoreTextHeight - mPicturesPadding*(pictureLines+1)) / pictureLines;
 		
-		float wScale = picDisplayWidth / AnimalmemoryTest.mAnimalMemoryData.getPictureWidth();
-		float hScale = picDisplayHeight / AnimalmemoryTest.mAnimalMemoryData.getPictureHeight();	
-		scale = (wScale < hScale)? wScale : hScale;
+		float wScale = mPicDisplayWidth / AnimalmemoryTest.mAnimalMemoryData.getPictureWidth();
+		float hScale = mPicDisplayHeight / AnimalmemoryTest.mAnimalMemoryData.getPictureHeight();	
+		mScale = (wScale < hScale)? wScale : hScale;
 	
 	}
 	
@@ -83,19 +94,19 @@ public class AnimalsSelectScene extends NodeEventLayer {
 	public void update(float d) {
 		super.update(d);
 		int curScore = ShowChapters.getInstance().getCurrentScore();
-		score.setString("得分: " + curScore);	
+		mScore.setString("得分: " + curScore);	
 		
-		remain -= d;
-		if (remain <= 0)
-			remain = 0;
-		time.setString("时间剩余: "+(int)remain+"秒");
+		mRemain -= d;
+		if (mRemain <= 0)
+			mRemain = 0;
+		mTime.setString("时间剩余: "+(int)mRemain+"秒");
 		
-		if (selectNumber >= step2InStep1Number) {
-			if (remain > 2.0f)
-				remain = 2.0f;
+		if (mSelectNumber >= mStep2InStep1Number) {
+			if (mRemain > 2.0f)
+				mRemain = 2.0f;
 		}
 		
-		if (remain <= 0.0f) {
+		if (mRemain <= 0.0f) {
 			ShowChapters.getInstance().finishCurrentScene();
 		}
 	}
@@ -108,15 +119,25 @@ public class AnimalsSelectScene extends NodeEventLayer {
 		
 		@Override
 		public boolean ccTouchesBegan(MotionEvent event) {
-			selectNumber++;
-			if(selectNumber <= step2InStep1Number){
+			mSelectNumber++;
+			if(mSelectNumber <= mStep2InStep1Number){
+				String selectPic = "";
 				if(AnimalmemoryTest.mAnimalMemoryData.getStep1ShowPictureList().contains(this.name)) {
 					ShowChapters.getInstance().getCurrentChapter().mScore += 1;	
 					Report.animalmemory_score++;
+					selectPic = AnimalmemoryTest.mAnimalMemoryData.getRightPicture();
+				} else {
+					selectPic = AnimalmemoryTest.mAnimalMemoryData.getWrongPicture();
 				}
-				stopAllActions();
-				removeAllChildren(true);
-				getParent().removeChild(this, true);
+				ChildBaseSprite selectSprite = new ChildBaseSprite(selectPic, mScale);
+				PicPostion picpos = picturesPostion.get(this.name);
+				MyLog.v(LOG_TAG, String.format("ccTouchesBegan: selectPic:%s, x:%f, y:%f", selectPic, x, y));
+				selectSprite.setAnchorPoint(0.0f, 0.0f);
+				selectSprite.setPosition(CGPoint.make(picpos.x, picpos.y));
+				mNode.addChild(selectSprite, 1);
+//				stopAllActions();
+//				removeAllChildren(true);
+//				getParent().removeChild(this, true);
 			}
 			return true;
 		}
@@ -129,7 +150,7 @@ public class AnimalsSelectScene extends NodeEventLayer {
 		}
 
 		public AnimalSprite(String filename, float x, float y, String name) {
-			super(filename, scale);
+			super(filename, mScale);
 			this.x = x;
 			this.y = y;
 			this.name = name;
@@ -153,6 +174,16 @@ public class AnimalsSelectScene extends NodeEventLayer {
 			return false;
 		}
 
+	}
+	
+	private class PicPostion {
+		float x;
+		float y;
+		
+		PicPostion(float x, float y) {
+			this.x = x;
+			this.y = y;
+		}
 	}
 
 }
