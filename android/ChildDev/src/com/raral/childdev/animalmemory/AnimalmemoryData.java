@@ -19,12 +19,14 @@ public class AnimalmemoryData {
 	private static final String ASSETS_PATH_PICTURE = "animalmemory_test";
 	private static final String PICTURE_SUFFIX = ".png";
 	private static final String BACKGROUND_PICTURE = "bg.png";
+	private static final String RIGHT_PICTURE = "right.png";
+	private static final String WRONG_PICTURE = "wrong.png";
 	private static final int TOTAL_PICTUREGROUPS = 1;
 	private static final int TOTAL_PICTURES = 20;
 	private static final int STEP1_SLEEPTIME = 2; //unit second.
 	private static final int STEP1_SHOWPICTURES = 8;
-	private static final int STEP2_APPEARED = 5;
-	private static final int STEP2_UNAPPEARED = 5;
+	private static final int STEP2_APPEARED = 4;
+	private static final int STEP2_UNAPPEARED = 4;
 	private static final int PICTURE_WIDTH = 350;
 	private static final int PICTURE_HEIGHT = 350;
 	private List<Integer> pictureGroupList = new ArrayList<Integer>();
@@ -64,6 +66,14 @@ public class AnimalmemoryData {
 	
 	public String getBackgroupPicture() {
 		return String.format("%s/%s", ASSETS_PATH_PICTURE, BACKGROUND_PICTURE);
+	}
+	
+	public String getRightPicture() {
+		return String.format("%s/%s", ASSETS_PATH_PICTURE, RIGHT_PICTURE);
+	}
+	
+	public String getWrongPicture() {
+		return String.format("%s/%s", ASSETS_PATH_PICTURE, WRONG_PICTURE);
 	}
 	
 	public int getTotalTime() {
