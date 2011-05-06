@@ -64,7 +64,7 @@ public class SlideSprite extends CCNode implements UpdateCallback {
 		Actor act = mActors.get(mActorIndex);
 		if(!mRunning || mElapsedTime >= act.mEndTime) {
 			mRunning = true;
-			MyLog.v(LOG_TAG, "pic: " + act.mPicture);
+//			MyLog.v(LOG_TAG, "pic: " + act.mPicture);
 			if(pictureSprite != null) {
 	    		pictureSprite.stopAllActions();
 	    		mNode.removeChild(pictureSprite, true);

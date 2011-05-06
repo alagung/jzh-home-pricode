@@ -26,7 +26,7 @@ public class AnimalsSelectScene extends NodeEventLayer {
 	int mSelectNumber = 0;
 	int mStep2InStep1Number = 0;
 	float mScale = 1.0f;  // for drawing picture
-	int mPicturesALine = 4; // show 5 pictures a line
+	int mPicturesALine = 4; // show 4 pictures a line
 	float mPicturesPadding = 30; // pixel
 	float mPicDisplayWidth = 0;
 	float mPicDisplayHeight = 0;
@@ -42,14 +42,14 @@ public class AnimalsSelectScene extends NodeEventLayer {
 		mStep2ShowPictureList = AnimalmemoryTest.mAnimalMemoryData.getStep2ShowPictureList();
 		mStep2InStep1Number = AnimalmemoryTest.mAnimalMemoryData.getStep2InStep1Number();
 
-		getPictureScale();
+		getPictureSizeAndScale();
 
 		MyLog.v(LOG_TAG, String.format("mScale:%f, w:%f, h:%f, padding:%f", mScale, mPicDisplayWidth, mPicDisplayHeight, mPicturesPadding));
-		
+		// padding+pic+padding+pic+padding
 		for( int i=0; i<mStep2ShowPictureList.size(); i++) {
 			String pic = mStep2ShowPictureList.get(i);
-			float x = (i % mPicturesALine) * mPicDisplayWidth + mPicturesPadding;
-			float y = (i / mPicturesALine) * mPicDisplayHeight + mPicturesPadding;
+			float x = (i % mPicturesALine) * mPicDisplayWidth + mPicturesPadding*((i % mPicturesALine)+1);
+			float y = (i / mPicturesALine) * mPicDisplayHeight + mPicturesPadding*((i / mPicturesALine)+1);
 			MyLog.v(LOG_TAG, String.format("i:%d, x:%f, y:%f", i, x, y));
 			picturesPostion.put(pic, new PicPostion(x, y));
 //			addSimpleAct(new AnimalSprite(pic, x, y, pic), 1.0f, null);
@@ -70,7 +70,7 @@ public class AnimalsSelectScene extends NodeEventLayer {
         mNode.addChild(mTime, 0);
 	}
 
-	private void getPictureScale() {
+	private void getPictureSizeAndScale() {
 		mPicturesPadding *= Tools.getSizeScale();
 		if(mStep2ShowPictureList.size() < mPicturesALine)
 			mPicturesALine = mStep2ShowPictureList.size();
@@ -81,8 +81,14 @@ public class AnimalsSelectScene extends NodeEventLayer {
 		
 		float wScale = mPicDisplayWidth / AnimalmemoryTest.mAnimalMemoryData.getPictureWidth();
 		float hScale = mPicDisplayHeight / AnimalmemoryTest.mAnimalMemoryData.getPictureHeight();	
-		mScale = (wScale < hScale)? wScale : hScale;
-	
+		MyLog.v(LOG_TAG, String.format("wScale:%f, hScale:%f", wScale, hScale));
+		if(wScale < hScale){
+			mScale = wScale;
+			mPicDisplayHeight = AnimalmemoryTest.mAnimalMemoryData.getPictureHeight() * mScale;
+		} else {
+			mScale = hScale;
+			mPicDisplayWidth = AnimalmemoryTest.mAnimalMemoryData.getPictureWidth() * mScale;
+		}
 	}
 	
 	@Override
@@ -131,7 +137,7 @@ public class AnimalsSelectScene extends NodeEventLayer {
 				}
 				ChildBaseSprite selectSprite = new ChildBaseSprite(selectPic, mScale);
 				PicPostion picpos = picturesPostion.get(this.name);
-				MyLog.v(LOG_TAG, String.format("ccTouchesBegan: selectPic:%s, x:%f, y:%f", selectPic, x, y));
+//				MyLog.v(LOG_TAG, String.format("ccTouchesBegan: selectPic:%s, x:%f, y:%f", selectPic, x, y));
 				selectSprite.setAnchorPoint(0.0f, 0.0f);
 				selectSprite.setPosition(CGPoint.make(picpos.x, picpos.y));
 				mNode.addChild(selectSprite, 1);
