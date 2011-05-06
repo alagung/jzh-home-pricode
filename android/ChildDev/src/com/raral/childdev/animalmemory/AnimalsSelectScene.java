@@ -1,10 +1,10 @@
 package com.raral.childdev.animalmemory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.cocos2d.nodes.CCLabel;
-import org.cocos2d.nodes.CCNode;
 import org.cocos2d.types.CGPoint;
 
 import android.view.MotionEvent;
@@ -31,12 +31,12 @@ public class AnimalsSelectScene extends NodeEventLayer {
 	float mPicDisplayWidth = 0;
 	float mPicDisplayHeight = 0;
 	int mScoreTextHeight = 20;
-	CCNode mNode = null;
+
+	List<String> mSelectPictures = new ArrayList<String>();
 	HashMap<String, PicPostion> picturesPostion = new HashMap<String, PicPostion>();
 
 	public AnimalsSelectScene() {
 		super();
-		mNode = this;
 		MyLog.v(LOG_TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
 		
 		mStep2ShowPictureList = AnimalmemoryTest.mAnimalMemoryData.getStep2ShowPictureList();
@@ -56,18 +56,18 @@ public class AnimalsSelectScene extends NodeEventLayer {
 			AnimalSprite anims = new AnimalSprite(pic, x, y, pic);
 			anims.setAnchorPoint(0, 0);
 			anims.setPosition(CGPoint.make(x, y));
-			mNode.addChild(anims, 0);
+			addChild(anims, 0);
 		}
         
         mScore = CCLabel.makeLabel("得分: 0", "DroidSans", 18);
         mScore.setAnchorPoint(1.0f, 1.0f);
         mScore.setPosition(CGPoint.make(Tools.getScreenWidth() - 20, Tools.getScreenHeight() - mScoreTextHeight));
-        mNode.addChild(mScore, 0);
+        addChild(mScore, 0);
         
         mTime = CCLabel.makeLabel("时间剩余: 60秒", "DroidSans", 18);
         mTime.setAnchorPoint(0.0f, 1.0f);
         mTime.setPosition(CGPoint.make(20, Tools.getScreenHeight() - mScoreTextHeight));
-        mNode.addChild(mTime, 0);
+        addChild(mTime, 0);
 	}
 
 	private void getPictureSizeAndScale() {
@@ -89,6 +89,15 @@ public class AnimalsSelectScene extends NodeEventLayer {
 			mScale = hScale;
 			mPicDisplayWidth = AnimalmemoryTest.mAnimalMemoryData.getPictureWidth() * mScale;
 		}
+	}
+	
+	private void drawSelectPicture(String showPic, String overPic) {
+		ChildBaseSprite selectSprite = new ChildBaseSprite(overPic, mScale);
+		PicPostion picpos = picturesPostion.get(showPic);
+//		MyLog.v(LOG_TAG, String.format("ccTouchesBegan: selectPic:%s, x:%f, y:%f", selectPic, x, y));
+		selectSprite.setAnchorPoint(0.0f, 0.0f);
+		selectSprite.setPosition(CGPoint.make(picpos.x, picpos.y));
+		addChild(selectSprite, 1);
 	}
 	
 	@Override
@@ -125,22 +134,23 @@ public class AnimalsSelectScene extends NodeEventLayer {
 		
 		@Override
 		public boolean ccTouchesBegan(MotionEvent event) {
-			mSelectNumber++;
+			
+			if(!mSelectPictures.contains(this.name)) {
+				mSelectPictures.add(this.name);
+				mSelectNumber++;
+			}
+				
 			if(mSelectNumber <= mStep2InStep1Number){
-				String selectPic = "";
+				String overPic = "";
 				if(AnimalmemoryTest.mAnimalMemoryData.getStep1ShowPictureList().contains(this.name)) {
 					ShowChapters.getInstance().getCurrentChapter().mScore += 1;	
 					Report.animalmemory_score++;
-					selectPic = AnimalmemoryTest.mAnimalMemoryData.getRightPicture();
+					overPic = AnimalmemoryTest.mAnimalMemoryData.getRightPicture();
 				} else {
-					selectPic = AnimalmemoryTest.mAnimalMemoryData.getWrongPicture();
+					overPic = AnimalmemoryTest.mAnimalMemoryData.getWrongPicture();
 				}
-				ChildBaseSprite selectSprite = new ChildBaseSprite(selectPic, mScale);
-				PicPostion picpos = picturesPostion.get(this.name);
-//				MyLog.v(LOG_TAG, String.format("ccTouchesBegan: selectPic:%s, x:%f, y:%f", selectPic, x, y));
-				selectSprite.setAnchorPoint(0.0f, 0.0f);
-				selectSprite.setPosition(CGPoint.make(picpos.x, picpos.y));
-				mNode.addChild(selectSprite, 1);
+				
+				drawSelectPicture(this.name, overPic);
 //				stopAllActions();
 //				removeAllChildren(true);
 //				getParent().removeChild(this, true);
