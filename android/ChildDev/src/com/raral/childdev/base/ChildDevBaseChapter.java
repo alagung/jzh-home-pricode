@@ -53,7 +53,7 @@ abstract public class ChildDevBaseChapter {
 		try {
             Class<?> c = mScenes.get(mNextScene++);
             CCScene s = CCScene.node();
-    		s.addChild((CCLayer) c.newInstance());
+    		s.addChild((ChildDevBaseLayer) c.newInstance());
     		return s;
         } catch (Exception e) {
             return null;

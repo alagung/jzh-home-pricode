@@ -5,6 +5,7 @@ import org.cocos2d.layers.CCLayer;
 import org.cocos2d.menus.CCMenuItem;
 import org.cocos2d.nodes.CCNode;
 import org.cocos2d.protocols.CCTouchDelegateProtocol;
+import org.cocos2d.types.ccColor4B;
 
 import android.view.MotionEvent;
 

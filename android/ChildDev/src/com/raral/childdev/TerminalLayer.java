@@ -39,16 +39,16 @@ public class TerminalLayer extends ChildDevBaseLayer {
 		score.setPosition(s.width / 2, yy);
 		addChild(score);
 		yy = score.getPosition().y - score.getContentSizeRef().height - 20;	
-		
-		CCAnimation animation = CCAnimation.animation("report", 0.2f);
-        for (int i = 1; i < 10; i++) {
-            animation.addFrame(CCFormatter.format("grossini_dance_%02d.png", i));
-        }
-        
-        CCSprite report = new CCSprite("grossini.png");
-        report.setAnchorPoint(0.5f, 1.0f);
-        report.setPosition(s.width / 2, yy);
-		addSimpleAct(report, 1.0f, CCRepeatForever.action(CCAnimate.action(animation)));
+//		
+//		CCAnimation animation = CCAnimation.animation("report", 0.2f);
+//        for (int i = 1; i < 10; i++) {
+//            animation.addFrame(CCFormatter.format("grossini_dance_%02d.png", i));
+//        }
+//        
+//        CCSprite report = new CCSprite("grossini.png");
+//        report.setAnchorPoint(0.5f, 1.0f);
+//        report.setPosition(s.width / 2, yy);
+//		addSimpleAct(report, 1.0f, CCRepeatForever.action(CCAnimate.action(animation)));
 	}
 
 	@Override

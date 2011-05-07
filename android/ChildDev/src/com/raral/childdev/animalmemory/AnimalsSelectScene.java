@@ -21,7 +21,7 @@ public class AnimalsSelectScene extends NodeEventLayer {
 	private static final String LOG_TAG = "AnimalSelectLayer";
 	CCLabel mScore;
 	CCLabel mTime;
-	float mRemain = 60.0f;
+	float mRemainTime = 60.0f;
 	List<String> mStep2ShowPictureList;
 	int mSelectNumber = 0;
 	int mStep2InStep1Number = 0;
@@ -60,11 +60,13 @@ public class AnimalsSelectScene extends NodeEventLayer {
 		}
         
         mScore = CCLabel.makeLabel("得分: 0", "DroidSans", 18);
+//        mScore.setColor(new ccColor3B(16,16,255));
         mScore.setAnchorPoint(1.0f, 1.0f);
         mScore.setPosition(CGPoint.make(Tools.getScreenWidth() - 20, Tools.getScreenHeight() - mScoreTextHeight));
         addChild(mScore, 0);
         
         mTime = CCLabel.makeLabel("时间剩余: 60秒", "DroidSans", 18);
+//        mTime.setColor(new ccColor3B(16,16,255));
         mTime.setAnchorPoint(0.0f, 1.0f);
         mTime.setPosition(CGPoint.make(20, Tools.getScreenHeight() - mScoreTextHeight));
         addChild(mTime, 0);
@@ -82,7 +84,7 @@ public class AnimalsSelectScene extends NodeEventLayer {
 		float wScale = mPicDisplayWidth / AnimalmemoryTest.mAnimalMemoryData.getPictureWidth();
 		float hScale = mPicDisplayHeight / AnimalmemoryTest.mAnimalMemoryData.getPictureHeight();	
 		MyLog.v(LOG_TAG, String.format("wScale:%f, hScale:%f", wScale, hScale));
-		if(wScale < hScale){
+		if(wScale > hScale){
 			mScale = wScale;
 			mPicDisplayHeight = AnimalmemoryTest.mAnimalMemoryData.getPictureHeight() * mScale;
 		} else {
@@ -111,17 +113,17 @@ public class AnimalsSelectScene extends NodeEventLayer {
 		int curScore = ShowChapters.getInstance().getCurrentScore();
 		mScore.setString("得分: " + curScore);	
 		
-		mRemain -= d;
-		if (mRemain <= 0)
-			mRemain = 0;
-		mTime.setString("时间剩余: "+(int)mRemain+"秒");
+		mRemainTime -= d;
+		if (mRemainTime <= 0)
+			mRemainTime = 0;
+		mTime.setString("时间剩余: "+(int)mRemainTime+"秒");
 		
 		if (mSelectNumber >= mStep2InStep1Number) {
-			if (mRemain > 2.0f)
-				mRemain = 2.0f;
+			if (mRemainTime > 2.0f)
+				mRemainTime = 2.0f;
 		}
 		
-		if (mRemain <= 0.0f) {
+		if (mRemainTime <= 0.0f) {
 			ShowChapters.getInstance().finishCurrentScene();
 		}
 	}
