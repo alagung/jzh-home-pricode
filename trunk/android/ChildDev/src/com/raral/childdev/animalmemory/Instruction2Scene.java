@@ -32,7 +32,7 @@ public class Instruction2Scene extends ChildDevBaseLayer {
 		if (yy == 0)
 			yy = Tools.getScreenHeight() - 60;
 		
-		CCLabel hint = CCLabel.makeLabel(text, "DroidSans", Tools.getFontSize(28));
+		CCLabel hint = CCLabel.makeLabel(text, "DroidSans", Tools.getFontSize(32));
 		hint.setAnchorPoint(0.5f, 1.0f);
 		hint.setPosition(CGPoint.make(Tools.getScreenWidth() / 2, yy));
         hint.setOpacity(0);

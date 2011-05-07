@@ -28,7 +28,7 @@ public class ShowChapters {
 		super();
 		mChapters = new ChildDevBaseChapter[] {
 				new AnimalmemoryTest(),
-				new AirsearchTest(),
+//				new AirsearchTest(),
 		};
 		setCurrent(0);
 	}

@@ -68,6 +68,10 @@ public class AnimalmemoryData {
 		return String.format("%s/%s", ASSETS_PATH_PICTURE, BACKGROUND_PICTURE);
 	}
 	
+	public String getPath() {
+		return ASSETS_PATH_PICTURE;
+	}
+	
 	public String getRightPicture() {
 		return String.format("%s/%s", ASSETS_PATH_PICTURE, RIGHT_PICTURE);
 	}
@@ -79,7 +83,6 @@ public class AnimalmemoryData {
 	public int getTotalTime() {
 		return STEP1_SLEEPTIME * STEP1_SHOWPICTURES;
 	}
-	
 	
 	public void initData() {
 		assert (TOTAL_PICTUREGROUPS > 0 && TOTAL_PICTURES > 0 && TOTAL_PICTURES >= STEP1_SHOWPICTURES );

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.nodes.CCSpriteFrameCache;
+import org.cocos2d.nodes.CCTextureCache;
 
 import com.raral.childdev.R;
 import com.raral.childdev.util.MyLog;
@@ -14,8 +16,10 @@ import com.raral.childdev.util.MyLog;
 
 import android.app.ExpandableListActivity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -38,24 +42,26 @@ public class Launcher extends ExpandableListActivity {
     
     private static final String[][] childNames = {
     	{
-    		"天空搜索",
-    		"测试",
+    		"动物记忆",
     	},    	
     };
     private static final Object[][] activities = {
     	{
-    		ChildDevMain.class,
-    		TestMain.class,    		
+    		ChildDevMain.class,  		
     	},
     };
     
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		MyLog.i(LOG_TAG, "Contact Email: yitercel@msn.com");
 		this.requestFullScreen();
-		DisplayMetrics metric = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(metric);
-		MyLog.v(LOG_TAG, String.format("onCreate, w:%d, h:%d", metric.widthPixels, metric.heightPixels));
+		startActivity(new Intent(Launcher.this,ChildDevMain.class));  
+//		initListAdapter();
+		this.setContentView(R.layout.main);
+	}
+	
+	private void initListAdapter() {
 
 		for (int i = 0; i < groupNames.length; i++) {
 			String groupName = groupNames[i];
@@ -86,7 +92,6 @@ public class Launcher extends ExpandableListActivity {
                 new int[] { android.R.id.text1 }
 		);
 		this.setListAdapter(adapter);
-		this.setContentView(R.layout.main);
 	}
 	
 	@Override
@@ -96,11 +101,28 @@ public class Launcher extends ExpandableListActivity {
 		startActivity(intent);
 		return super.onChildClick(parent, view, groupPosition, childPosition, id);
 	}
+	
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(0); 
+    }
 
 	private void requestFullScreen() {
 		Window window = this.getWindow();
 		window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		window.clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 		window.requestFeature(Window.FEATURE_NO_TITLE);
+		
+		DisplayMetrics metric = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metric);
+		MyLog.v(LOG_TAG, String.format("onCreate-getMetrics, w:%d, h:%d", metric.widthPixels, metric.heightPixels));
+//		Display display = getWindowManager().getDefaultDisplay();
+//		MyLog.v(LOG_TAG, String.format("onCreate-getDefaultDisplay, w:%d, h:%d", display.getWidth(), display.getHeight()));
+		if(metric.heightPixels > metric.widthPixels) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		}
+		
 	}
 }
