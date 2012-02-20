@@ -35,7 +35,8 @@ public class WatchDog extends Service {
 	    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
 	    new Thread() {  
 	        @Override  
-	        public void run() {  
+	        public void run() { 
+	        	boolean first = true;
 	            // 看门狗, 不停的查看当前activity任务栈的栈顶  
 	            while (true) {  
 	                // 首先获取到最上面的任务栈, get(0) 获取到任务栈栈顶的activity  
@@ -51,8 +52,11 @@ public class WatchDog extends Service {
 	                        }  
 	                    }  
 	                }*/
-	                if (packname != "com.yypie")
-		                startActivity(intent);  
+	                if (packname != "com.yypie" && first)
+	                {
+		                startActivity(intent); 
+		                first = false;
+	                }
 	                try {  
 	                    Thread.sleep(200);  
 	                } catch (InterruptedException e) {  
