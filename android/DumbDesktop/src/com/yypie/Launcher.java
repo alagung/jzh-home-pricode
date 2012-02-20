@@ -106,10 +106,6 @@ public class Launcher extends ListActivity {
 
 	@Override
 	protected void onResume() {
-		new AlertDialog.Builder(this).setTitle("确认").setMessage("确定吗？")
-				.setPositiveButton("是", null).setNegativeButton("否", null)
-				.show();
-
 		super.onResume();
 	}
 }
