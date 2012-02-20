@@ -36,12 +36,15 @@ public class WatchDog extends Service {
 	    new Thread() {  
 	        @Override  
 	        public void run() { 
-	        	boolean first = true;
+	        	String appName = null;
 	            // 看门狗, 不停的查看当前activity任务栈的栈顶  
 	            while (true) {  
 	                // 首先获取到最上面的任务栈, get(0) 获取到任务栈栈顶的activity  
 	                String packname = activityManager.getRunningTasks(1).get(0).topActivity  
 	                        .getPackageName();
+	                String cappName = activityManager.getRunningTasks(1).get(0).topActivity  
+                    .getClassName();
+	                
 	                /*for (LockAppInfo apppackinfo : blockappinfos) {  
 	                    if (packname.equals(apppackinfo.getPackname())) {  
 	                        //防止重复弹出密码对话框  
@@ -52,10 +55,10 @@ public class WatchDog extends Service {
 	                        }  
 	                    }  
 	                }*/
-	                if (packname != "com.yypie" && first)
+	                if (!packname.equals("com.yypie") && !cappName.equals(appName))
 	                {
 		                startActivity(intent); 
-		                first = false;
+		                appName = cappName;
 	                }
 	                try {  
 	                    Thread.sleep(200);  
