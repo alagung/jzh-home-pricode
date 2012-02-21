@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.yypie"
-      android:versionCode="1"
-      android:versionName="1.0">
+	package="com.yypie" android:versionCode="1" android:versionName="1.0">
 	<application android:icon="@drawable/icon" android:label="@string/app_name">
-		<activity android:name=".Manager" android:label="@string/app_name">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>
 		<!--  作为桌面Activity -->
 		<activity android:name=".Launcher">
 			<intent-filter>
@@ -21,11 +13,20 @@
 				<!-- 关键部分 结束-->
 			</intent-filter>
 		</activity>
-		<service android:name=".WatchDog" android:exported="true"></service>  
+		<service android:name=".WatchDog" android:exported="true"></service>
+		<receiver android:name=".filter.PhoneStatReceiver">
+			<intent-filter>
+				<action android:name="android.intent.action.PHONE_STATE" />
+				<action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+			</intent-filter>
+		</receiver>
 	</application>
-	<uses-permission android:name="android.permission.SET_WALLPAPER" />  
-	<uses-permission android:name="android.permission.SET_WALLPAPER_HINTS" />  
-	<uses-permission android:name="android.permission.VIBRATE" />  
+	<uses-permission android:name="android.permission.SET_WALLPAPER" />
+	<uses-permission android:name="android.permission.SET_WALLPAPER_HINTS" />
+	<uses-permission android:name="android.permission.VIBRATE" />
+	<uses-permission android:name="android.permission.RESTART_PACKAGES" />
 	<uses-permission android:name="android.permission.WRITE_SETTINGS" />
-	<uses-permission android:name="android.permission.GET_TASKS" />	
+	<uses-permission android:name="android.permission.GET_TASKS" />
+	<uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+	<uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"></uses-permission>
 </manifest>

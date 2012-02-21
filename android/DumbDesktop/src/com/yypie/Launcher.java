@@ -9,6 +9,7 @@ import android.app.Instrumentation;
 import android.app.ListActivity;
 import android.app.NotificationManager;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -84,6 +85,18 @@ public class Launcher extends ListActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+			new AlertDialog.Builder(this)
+			.setTitle("Message Box")
+			.setMessage("Sure to exit?")
+			.setNegativeButton("No", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+				}
+			})
+			.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					finish();
+				}
+			}).show(); 
 			return true;
 		}
 		return super.onKeyDown(keyCode, event); 
