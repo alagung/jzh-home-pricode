@@ -24,19 +24,16 @@ public class Launcher extends ListActivity {
 			{ "便携式Wifi热点设置", "com.android.settings",
 					"com.android.settings.TetherSettings" },
 			{ "密码管理", "com.yypie", "com.yypie.Manager" } };
-	private WatchDog  mMyService;  
+	private WatchDog  mMyService;
 	
 	//这里需要用到ServiceConnection在Context.bindService和context.unBindService()里用到  
-	private ServiceConnection mServiceConnection = new ServiceConnection() {
-		// 当我bindService时，让TextView显示MyService里getSystemTime()方法的返回值
+	private ServiceConnection mConn = new ServiceConnection() {
 		public void onServiceConnected(ComponentName name, IBinder service) {
-			// TODO Auto-generated method stub
 			mMyService = ((WatchDog.MyBinder) service).getService();
 		}
 
 		public void onServiceDisconnected(ComponentName name) {
-			// TODO Auto-generated method stub
-
+			mMyService = null;
 		}
 	};
  
@@ -46,9 +43,15 @@ public class Launcher extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		initListAdapter();
-		Intent i  = new Intent();  
-		i.setClass(this, WatchDog.class);
-		this.startService(i);
+		//this.startService(new Intent(this, WatchDog.class));
+		this.bindService(new Intent(this, WatchDog.class), mConn, BIND_AUTO_CREATE);
+	}
+	
+	@Override
+	protected void onDestroy() {
+		//this.stopService(new Intent(this, WatchDog.class));
+		this.unbindService(mConn);
+		super.onDestroy();
 	}
 
 	private void initListAdapter() {
