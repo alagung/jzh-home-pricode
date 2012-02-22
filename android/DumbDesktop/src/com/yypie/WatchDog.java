@@ -4,10 +4,8 @@ import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 import android.app.ActivityManager;
-import android.app.AlertDialog;
 import android.app.Service;
 import android.app.ActivityManager.RunningTaskInfo;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
@@ -15,10 +13,12 @@ import android.os.IBinder;
 public class WatchDog extends Service {
 	final static long termOfValidity = 15000000; // 15s -> m second
 	ActivityManager activityManager;
-	Intent intent;
+	Intent intent = null;
+	Intent intentDesk = null;
 	ConcurrentHashMap<String, Long> credential;
 	HashSet<String> needPassword;
 	HashSet<String> allows;
+	public Launcher m = null;
 	
 	//这里定义吧一个Binder类，用在onBind()有方法里，这样Activity那边可以获取到 
 	private MyBinder mBinder = new MyBinder();  
@@ -26,31 +26,23 @@ public class WatchDog extends Service {
 	public IBinder onBind(Intent intent) {
 		return mBinder;
 	}
-
+	
 	@Override
 	public void onCreate() {  
 	    activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);  
 		// Create new indent for password
 	    intent = new Intent(this, Manager.class);  
 	    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
+	    intentDesk = new Intent(this, Launcher.class);  
+	    intentDesk.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
+	    intentDesk.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
 	    
-		final AlertDialog dia = new AlertDialog.Builder(this)
-		.setTitle("Message Box")
-		.setMessage("Sure to exit?")
-		.setNegativeButton("No", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-			}
-		})
-		.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-			}
-		}).create();
-	    
-	    // Initialize global settings
+		// Initialize global settings
 	    needPassword = new HashSet<String>();
 	    allows = new HashSet<String>();
 	    
-	    needPassword.add("com.android.settings/com.android.settings.TetherSettings");
+	    needPassword.add("com.android.settings/com.android.settings.wifi.WifiApSettings");
+	    allows.add("com.android.phone/com.android.phone.EmergencyDialer");
 	    
 	    new Thread() {  
 	        @Override  
@@ -73,7 +65,7 @@ public class WatchDog extends Service {
 	                
 	                long timestamp = System.currentTimeMillis();
 	                
-	                if (allows.contains(full) || Launcher.class.getPackage().equals(packname)) {
+	                if (allows.contains(full) || Launcher.class.getPackage().getName().equals(packname)) {
 	                	allow = true;
 	                	skip = true;
 	                	if (desk.equals(full)) {
@@ -97,10 +89,10 @@ public class WatchDog extends Service {
 					
 	                if (!allow) {
 	                	// Restart it
-	                	activityManager.restartPackage(packname);
+	                	//activityManager.restartPackage(intentDesk.getPackage());
+	                	startActivity(intentDesk);
 	                } else if (!skip) {
-						// startActivity(intent);
-	                	dia.show();
+						startActivity(intent);
 	                	credential.put(full, System.currentTimeMillis());
 					}
 	                try {  
