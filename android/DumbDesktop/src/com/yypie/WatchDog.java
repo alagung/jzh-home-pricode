@@ -1,22 +1,16 @@
 package com.yypie;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import android.app.ActivityManager;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.Service;
 import android.app.ActivityManager.RunningTaskInfo;
-import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.os.SystemClock;
 
 public class WatchDog extends Service {
 	final static long termOfValidity = 15000000; // 15s -> m second
@@ -30,7 +24,6 @@ public class WatchDog extends Service {
 	private MyBinder mBinder = new MyBinder();  
 	@Override
 	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
 		return mBinder;
 	}
 
@@ -66,8 +59,7 @@ public class WatchDog extends Service {
 	        	credential = new ConcurrentHashMap<String, Long>();
 	        	String desk = Launcher.class.getPackage() + "/" + Launcher.class.getName();
 	    	    
-	        	// 看门狗, 不停的查看当前activity任务栈的栈顶  
-	            while (true) {  
+	        	while (true) {  
 	            	// Allow it go
 	            	boolean allow = false;
 	            	// No password
@@ -77,7 +69,6 @@ public class WatchDog extends Service {
 	            	RunningTaskInfo task = activityManager.getRunningTasks(1).get(0);
 	            	
 	                String packname = task.topActivity.getPackageName();
-	                String clsName = task.topActivity.getClassName();
 	                String full = task.topActivity.flattenToString();
 	                
 	                long timestamp = System.currentTimeMillis();
@@ -106,7 +97,7 @@ public class WatchDog extends Service {
 					
 	                if (!allow) {
 	                	// Restart it
-	                	// activityManager.restartPackage(packname);
+	                	activityManager.restartPackage(packname);
 	                } else if (!skip) {
 						// startActivity(intent);
 	                	dia.show();
@@ -119,7 +110,7 @@ public class WatchDog extends Service {
 	                }  
 	            }  
 	        }  
-	    }.start();  
+	    }.start();
 	    super.onCreate();  
 	}  
 
