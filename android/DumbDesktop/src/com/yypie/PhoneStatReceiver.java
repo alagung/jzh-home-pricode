@@ -32,7 +32,7 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 				break;
 			case TelephonyManager.CALL_STATE_OFFHOOK:
 				// Talking
-				//endCall(incomingNumber);
+				//endCall(incomingNumber.length() == 0 ? getCurrentNumber() : incomingNumber);
 				break;
 			case TelephonyManager.CALL_STATE_RINGING:
 				// Ringing
@@ -61,8 +61,9 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 			// Initial TM
 			String outPhoneNumber = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
 			endCall(outPhoneNumber);
+			//setCurrentNumber(outPhoneNumber);
 		} else {
-			// Initial TM
+			//setCurrentNumber(null);
 			getTM().listen(listener, PhoneStateListener.LISTEN_CALL_STATE);
 		}
 	}
@@ -99,7 +100,7 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 		if (number != null) return;
 		try {
 			// We don't block emergency call
-			//if (isNumberBlocked(number))
+			if (isNumberBlocked(number))
 				getIT().endCall();
 		} catch (RemoteException e) {
 			e.printStackTrace();
@@ -113,7 +114,8 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 
 		if (number.equals("110") || number.equals("119")
 				|| number.equals("120") || number.equals("122")
-				|| number.equals("112") || number.equals("911"))
+				//|| number.equals("112") 
+				|| number.equals("911"))
 			return false;
 		// Test
 		if (!number.equals("10000") && !number.equals("18321012821") 
@@ -125,7 +127,7 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 		if (context == null)
 			return;
 		context.bindService(new Intent(context, WatchDog.class), mConn,
-				Context.BIND_AUTO_CREATE);
+				0);
 		mMyService.setCurrentNumber(number);
 		context.unbindService(mConn);
 	}
@@ -134,7 +136,7 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 		if (context == null)
 			return null;
 		context.bindService(new Intent(context, WatchDog.class), mConn,
-				Context.BIND_AUTO_CREATE);
+				0);
 		String number = mMyService.getCurrentNumber();
 		context.unbindService(mConn);
 		return number;

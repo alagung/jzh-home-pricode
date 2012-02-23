@@ -42,14 +42,11 @@ public class Launcher extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		initListAdapter();
-		// this.startService(new Intent(this, WatchDog.class));
-		this.bindService(new Intent(this, WatchDog.class), mConn,
-				BIND_AUTO_CREATE);
+		this.startService(new Intent(this, WatchDog.class));
 	}
 
 	@Override
 	protected void onDestroy() {
-		this.unbindService(mConn);
 		super.onDestroy();
 	}
 

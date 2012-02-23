@@ -16,6 +16,8 @@ public class WatchDog extends Service {
 	final static long termOfValidity = 15000; // 15s -> m second
 	public final static String extraApp = "extraApp";
 	
+	Thread t = null;
+	boolean running = false;
 	ActivityManager activityManager;
 	Intent intent = null;
 	Intent intentDesk = null;
@@ -52,15 +54,17 @@ public class WatchDog extends Service {
 	    allows.add("com.android.phone/com.android.phone.EmergencyCallbackModeExitDialog");
 	    allows.add("com.android.phone/com.android.phone.EmergencyCallHandler"); 
 	    allows.add("com.android.phone/com.android.phone.InCallScreen");
-	    
-	    new Thread() {  
+	    t = new Thread() {  
 	        @Override  
 	        public void run() { 
+	        	
 	        	// every time renew the cred
 	        	credential = new ConcurrentHashMap<String, Long>();
 	        	String desk = Launcher.class.getPackage().getName() + "/" + Launcher.class.getName();
-	    	    
-	        	while (true) {  
+	        	
+	        	running = true;
+	    	    while (running) {
+		        	
 	            	// Allow it go
 	            	boolean allow = false;
 	            	// No password
@@ -107,14 +111,21 @@ public class WatchDog extends Service {
 	                try {  
 	                    Thread.sleep(200);  
 	                } catch (InterruptedException e) {  
-	                    e.printStackTrace();  
+	                    e.printStackTrace(); 
+	                    break;
 	                }  
 	            }  
 	        }  
-	    }.start();
+	    };
+	    t.start();
 	    super.onCreate();
 	}  
-	
+
+	public void onDestroy() {
+		t.stop(new InterruptedException());
+		running = false;
+		t = null;
+	}
 	public void registCred(String fullname) {
 		if (fullname != null)
 			credential.put(fullname, System.currentTimeMillis());
