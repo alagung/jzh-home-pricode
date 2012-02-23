@@ -61,7 +61,6 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 			// Initial TM
 			String outPhoneNumber = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
 			endCall(outPhoneNumber);
-			abortBroadcast();
 		} else {
 			// Initial TM
 			getTM().listen(listener, PhoneStateListener.LISTEN_CALL_STATE);
