@@ -24,14 +24,11 @@ public class Launcher extends ListActivity {
 			{ "便携式Wifi热点设置", "com.android.settings",
 					"com.android.settings.wifi.WifiApSettings" },
 			{ "紧急呼叫", "com.android.phone", "com.android.phone.EmergencyDialer" },
-			{ "密码管理", "com.android.settings", "com.android.settings.Manager" } };
+			{ "密码管理", "com.yypie", "com.yypie.Manager" } };
 	private WatchDog mMyService;
-
-	// 这里需要用到ServiceConnection在Context.bindService和context.unBindService()里用到
 	private ServiceConnection mConn = new ServiceConnection() {
 		public void onServiceConnected(ComponentName name, IBinder service) {
-			mMyService = ((WatchDog.MyBinder) service).getService();
-			mMyService.m = Launcher.this;
+			mMyService = ((WatchDog.WatchDogBinder) service).getService();
 		}
 
 		public void onServiceDisconnected(ComponentName name) {

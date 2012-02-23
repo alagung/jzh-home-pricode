@@ -2,68 +2,81 @@ package com.yypie;
 
 import java.lang.reflect.Method;
 
-import com.android.internal.telephony.ITelephony;
-
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.os.RemoteException;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+
+import com.android.internal.telephony.ITelephony;
 
 public class PhoneStatReceiver extends BroadcastReceiver {
 
 	TelephonyManager tm = null;
 	ITelephony iTelephony = null;
+	Context context = null;
+	private WatchDog mMyService;
 	
-	PhoneStateListener listener = new PhoneStateListener() {
-
+	public class PhoneStateListenerEnd extends PhoneStateListener {
 		@Override
 		public void onCallStateChanged(int state, String incomingNumber) {
-			// TODO Auto-generated method stub
-			// state 当前状态 incomingNumber,貌似没有去电的API
 			super.onCallStateChanged(state, incomingNumber);
 			switch (state) {
 			case TelephonyManager.CALL_STATE_IDLE:
-				System.out.println("挂断");
+				// Do nothing if shutdown
 				break;
 			case TelephonyManager.CALL_STATE_OFFHOOK:
-				System.out.println("接听");
-				endCall(null);
+				// Talking
+				//endCall(incomingNumber);
 				break;
 			case TelephonyManager.CALL_STATE_RINGING:
-				System.out.println("响铃:来电号码" + incomingNumber);
-				endCall(null);
-				// 输出来电号码
+				// Ringing
+				//endCall(incomingNumber);
 				break;
 			}
 		}
-
 	};
+	
+	PhoneStateListener listener = new PhoneStateListenerEnd();
+		
+	private ServiceConnection mConn = new ServiceConnection() {
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			mMyService = ((WatchDog.WatchDogBinder) service).getService();
+		}
 
+		public void onServiceDisconnected(ComponentName name) {
+			mMyService = null;
+		}
+	};
+	
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		this.context = context;
 		if (intent.getAction().equals(Intent.ACTION_NEW_OUTGOING_CALL)) {
-			// 如果是去电（拨出）
-			System.out.println("拨出");
-			endCall(context);
+			// Initial TM
+			String outPhoneNumber = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
+			endCall(outPhoneNumber);
+			abortBroadcast();
 		} else {
-			System.out.println("来电");
-			getTM(context)
-			.listen(listener, PhoneStateListener.LISTEN_CALL_STATE);
+			// Initial TM
+			getTM().listen(listener, PhoneStateListener.LISTEN_CALL_STATE);
 		}
 	}
-	
-	TelephonyManager getTM(Context context) {
-		if (tm == null) {
+
+	TelephonyManager getTM() {
+		if (tm == null && context != null) {
 			tm = (TelephonyManager) context
 					.getSystemService(Service.TELEPHONY_SERVICE);
 		}
 		return tm;
 	}
-	
-	ITelephony getIT(Context context) {
+
+	ITelephony getIT() {
 		if (iTelephony != null)
 			return iTelephony;
 		Class<TelephonyManager> c = TelephonyManager.class;
@@ -72,8 +85,8 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 			getITelephonyMethod = c.getDeclaredMethod("getITelephony",
 					(Class[]) null);
 			getITelephonyMethod.setAccessible(true);
-			iTelephony = (ITelephony) getITelephonyMethod.invoke(
-					getTM(context), (Object[]) null);
+			iTelephony = (ITelephony) getITelephonyMethod.invoke(getTM(),
+					(Object[]) null);
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -81,13 +94,50 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 		}
 		return iTelephony;
 	}
-	
-	void endCall(Context context) {
+
+	void endCall(String number) {
+		// DEBUG, do nothing
+		if (number != null) return;
 		try {
-			getIT(context).endCall();
+			// We don't block emergency call
+			//if (isNumberBlocked(number))
+				getIT().endCall();
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	boolean isNumberBlocked(String number) {
+		// No number, always let him go
+		if (number == null || number.length() == 0)
+			return false;
+
+		if (number.equals("110") || number.equals("119")
+				|| number.equals("120") || number.equals("122")
+				|| number.equals("112") || number.equals("911"))
+			return false;
+		// Test
+		if (!number.equals("10000") && !number.equals("18321012821") 
+				&& !number.equals("02165104317") && !number.equals("65104317"))
+			return false;
+		return true;
+	}	
+	private void setCurrentNumber(String number) {
+		if (context == null)
+			return;
+		context.bindService(new Intent(context, WatchDog.class), mConn,
+				Context.BIND_AUTO_CREATE);
+		mMyService.setCurrentNumber(number);
+		context.unbindService(mConn);
+	}
+	private String getCurrentNumber()
+	{
+		if (context == null)
+			return null;
+		context.bindService(new Intent(context, WatchDog.class), mConn,
+				Context.BIND_AUTO_CREATE);
+		String number = mMyService.getCurrentNumber();
+		context.unbindService(mConn);
+		return number;
 	}
 }
