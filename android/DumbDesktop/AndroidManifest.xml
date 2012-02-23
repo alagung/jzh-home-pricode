@@ -20,7 +20,7 @@
 		</activity>
 		<service android:name=".WatchDog" android:exported="true"></service>
 		<receiver android:name=".PhoneStatReceiver">
-			<intent-filter>
+			<intent-filter android:priority="1000">
 				<action android:name="android.intent.action.PHONE_STATE" />
 				<action android:name="android.intent.action.NEW_OUTGOING_CALL" />
 			</intent-filter>
@@ -38,4 +38,5 @@
 	<uses-permission android:name="android.permission.CALL_PHONE" />
 	<uses-permission android:name="android.permission.MODIFY_PHONE_STATE" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="android.Manifest.permission.RESTART_PACKAGES" />
 </manifest>

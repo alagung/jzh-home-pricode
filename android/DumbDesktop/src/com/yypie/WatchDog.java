@@ -6,22 +6,28 @@ import java.util.concurrent.ConcurrentHashMap;
 import android.app.ActivityManager;
 import android.app.Service;
 import android.app.ActivityManager.RunningTaskInfo;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Binder;
 import android.os.IBinder;
 
 public class WatchDog extends Service {
-	final static long termOfValidity = 15000000; // 15s -> m second
+	final static long termOfValidity = 15000; // 15s -> m second
+	public final static String extraApp = "extraApp";
+	
 	ActivityManager activityManager;
 	Intent intent = null;
 	Intent intentDesk = null;
 	ConcurrentHashMap<String, Long> credential;
 	HashSet<String> needPassword;
 	HashSet<String> allows;
-	public Launcher m = null;
+	
+	// Current calling number
+	String currentNumber = "";
 	
 	//这里定义吧一个Binder类，用在onBind()有方法里，这样Activity那边可以获取到 
-	private MyBinder mBinder = new MyBinder();  
+	private WatchDogBinder mBinder = new WatchDogBinder();  
 	@Override
 	public IBinder onBind(Intent intent) {
 		return mBinder;
@@ -43,13 +49,16 @@ public class WatchDog extends Service {
 	    
 	    needPassword.add("com.android.settings/com.android.settings.wifi.WifiApSettings");
 	    allows.add("com.android.phone/com.android.phone.EmergencyDialer");
+	    allows.add("com.android.phone/com.android.phone.EmergencyCallbackModeExitDialog");
+	    allows.add("com.android.phone/com.android.phone.EmergencyCallHandler"); 
+	    allows.add("com.android.phone/com.android.phone.InCallScreen");
 	    
 	    new Thread() {  
 	        @Override  
 	        public void run() { 
 	        	// every time renew the cred
 	        	credential = new ConcurrentHashMap<String, Long>();
-	        	String desk = Launcher.class.getPackage() + "/" + Launcher.class.getName();
+	        	String desk = Launcher.class.getPackage().getName() + "/" + Launcher.class.getName();
 	    	    
 	        	while (true) {  
 	            	// Allow it go
@@ -77,7 +86,7 @@ public class WatchDog extends Service {
 	                
 	                if (needPassword.contains(full)) {
 	                	allow = true;
-	                	if (credential.contains(full)) {
+	                	if (credential.containsKey(full)) {
 							long ex = credential.get(full).longValue();
 							if ((timestamp - ex) < termOfValidity) {
 								skip = true;
@@ -92,8 +101,8 @@ public class WatchDog extends Service {
 	                	//activityManager.restartPackage(intentDesk.getPackage());
 	                	startActivity(intentDesk);
 	                } else if (!skip) {
+	                	intent.putExtra(extraApp, full);
 						startActivity(intent);
-	                	credential.put(full, System.currentTimeMillis());
 					}
 	                try {  
 	                    Thread.sleep(200);  
@@ -103,12 +112,24 @@ public class WatchDog extends Service {
 	            }  
 	        }  
 	    }.start();
-	    super.onCreate();  
+	    super.onCreate();
 	}  
-
-	public class MyBinder extends Binder {
+	
+	public void registCred(String fullname) {
+		if (fullname != null)
+			credential.put(fullname, System.currentTimeMillis());
+	}
+	public void setCurrentNumber(String number) {
+		this.currentNumber = number;
+	}
+	public String getCurrentNumber()
+	{
+		return this.currentNumber;
+	}
+	
+	public class WatchDogBinder extends Binder {
 		WatchDog getService() {
 			return WatchDog.this;
 		}
-	}
+	}	
 }
