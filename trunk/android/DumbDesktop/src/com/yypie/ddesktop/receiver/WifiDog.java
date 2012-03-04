@@ -1,17 +1,14 @@
 package com.yypie.ddesktop.receiver;
 
-import com.yypie.ddesktop.service.ServiceProvider;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.net.TrafficStats;
 import android.net.wifi.WifiManager;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
 import android.util.Log;
+
+import com.yypie.ddesktop.service.ServiceProvider;
 
 public class WifiDog extends BroadcastReceiver {
 	public static final String WIFI_AP_STATE_CHANGED_ACTION = "android.net.wifi.WIFI_AP_STATE_CHANGED";

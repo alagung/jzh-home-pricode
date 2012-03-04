@@ -6,7 +6,6 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
@@ -15,7 +14,6 @@ import android.os.RemoteException;
 import android.telephony.TelephonyManager;
 
 import com.yypie.ddesktop.receiver.PhoneDog;
-import com.yypie.ddesktop.receiver.PhoneStatReceiver;
 import com.yypie.ddesktop.receiver.WifiDog;
 
 public class ServiceProvider extends Service {

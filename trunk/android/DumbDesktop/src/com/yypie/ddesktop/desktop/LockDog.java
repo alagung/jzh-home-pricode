@@ -1,18 +1,14 @@
 package com.yypie.ddesktop.desktop;
 
-import com.yypie.ddesktop.R;
-import com.yypie.ddesktop.service.ServiceProvider;
-
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.os.RemoteException;
 import android.view.KeyEvent;
+
+import com.yypie.ddesktop.R;
+import com.yypie.ddesktop.service.ServiceProvider;
 
 public class LockDog extends Activity {
 	public final static String arg1 = "arg1";
