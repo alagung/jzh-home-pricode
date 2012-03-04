@@ -75,6 +75,8 @@ public class Launcher extends ListActivity {
 					}).show();
 		} else {
 			Intent intent = new Intent();
+			intent.setAction(Intent.ACTION_MAIN);
+			intent.addCategory(Intent.CATEGORY_DEFAULT);
 			intent.setClassName(gItems[position][1], gItems[position][2]);
 			startActivityForResult(intent, 1);
 		}
@@ -82,14 +84,8 @@ public class Launcher extends ListActivity {
 		super.onListItemClick(l, v, position, id);
 	}
 
-	protected void clearAll() {
-		NotificationManager notiManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		notiManager.cancelAll();
-	}
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		clearAll();
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 

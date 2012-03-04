@@ -1,18 +1,22 @@
 package com.yypie.ddesktop.service;
 
 import android.app.ActivityManager;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.telephony.TelephonyManager;
 
 import com.yypie.ddesktop.receiver.PhoneDog;
 import com.yypie.ddesktop.receiver.PhoneStatReceiver;
+import com.yypie.ddesktop.receiver.WifiDog;
 
 public class ServiceProvider extends Service {
 	static final String ACTION_NAME = ServiceProvider.class.getName() + ".MAIN";
@@ -38,8 +42,13 @@ public class ServiceProvider extends Service {
 
 	ActivityDog ad = null;
 	PhoneDog pd = null;
-	ActivityManager activityManager;
-	TelephonyManager telephonyManager;
+	WifiDog wd = null;
+	
+	public ActivityManager activityManager;
+	public TelephonyManager telephonyManager;
+	public NotificationManager notificationManager;
+	public WifiManager wifiManager;
+	public ConnectivityManager connectivityManager;
 
 
 	private IServiceProvider.Stub mBinder = new ServiceProviderBinder();
@@ -52,12 +61,18 @@ public class ServiceProvider extends Service {
 	@Override
 	public void onCreate() {
 		activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-
 		telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-
+		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		notificationManager.cancelAll();
+		wifiManager = (WifiManager)getSystemService(WIFI_SERVICE);
+		connectivityManager = (ConnectivityManager)getSystemService(CONNECTIVITY_SERVICE);
+		
 		// Initialize global settings
 		pd = new PhoneDog(this, telephonyManager);
 		pd.startDog();
+		
+		wd = new WifiDog(this);
+		wd.startDog();
 		
 		ad = new ActivityDog(this, activityManager);
 		ad.startDog();
@@ -67,6 +82,8 @@ public class ServiceProvider extends Service {
 	public void onDestroy() {
 		pd.stopDog();
 		pd = null;
+		wd.stopDog();
+		wd = null;
 		ad.stopDog();
 		ad = null;
 		android.os.Process.killProcess(android.os.Process.myPid());

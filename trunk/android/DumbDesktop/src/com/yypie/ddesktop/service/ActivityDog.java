@@ -42,16 +42,20 @@ public class ActivityDog extends Thread {
 		needPassword = new HashSet<String>();
 		allows = new HashSet<String>();
 
-		needPassword.add("com.android.settings/com.android.settings.wifi.WifiApSettings");
+		needPassword
+				.add("com.android.settings/com.android.settings.wifi.WifiApSettings");
 		allows.add("com.android.phone/com.android.phone.EmergencyDialer");
-		allows.add("com.android.phone/com.android.phone.EmergencyCallbackModeExitDialog");
+		allows
+				.add("com.android.phone/com.android.phone.EmergencyCallbackModeExitDialog");
 		allows.add("com.android.phone/com.android.phone.EmergencyCallHandler");
 		allows.add("com.android.phone/com.android.phone.InCallScreen");
-		allows.add("com.android.phone/com.android.phone.PrivilegedOutgoingCallBroadcaster");
-		
+		allows
+				.add("com.android.phone/com.android.phone.PrivilegedOutgoingCallBroadcaster");
+
 		// TODO: test
-		allows.add("com.android.contacts/com.android.contacts.DialtactsActivity");
-		
+		allows
+				.add("com.android.contacts/com.android.contacts.DialtactsActivity");
+
 		credential = new ConcurrentHashMap<String, Long>();
 		credential.clear();
 	}
@@ -67,7 +71,7 @@ public class ActivityDog extends Thread {
 		running = true;
 		this.start();
 	}
-	
+
 	public void stopDog() {
 		this.interrupt();
 		running = false;
@@ -134,13 +138,14 @@ public class ActivityDog extends Thread {
 				}
 
 				if (!allow) {
-					Log.e("PhoneStatReceiver", "Blocked: " + full);
+					Log.e(ServiceProvider.TAG, "Blocked: " + full);
 					backToDesktop();
 				} else if (!skip) {
 					startLockDog(full);
+				} else {
 				}
 
-				Thread.sleep(200);
+				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				// We are stopped.
 				break;
