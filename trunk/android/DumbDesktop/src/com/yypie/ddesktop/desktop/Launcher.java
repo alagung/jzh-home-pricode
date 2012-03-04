@@ -1,40 +1,34 @@
-package com.yypie;
+package com.yypie.ddesktop.desktop;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.ActivityManager;
 import android.app.AlertDialog;
-import android.app.Instrumentation;
 import android.app.ListActivity;
 import android.app.NotificationManager;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.yypie.ddesktop.R;
+import com.yypie.ddesktop.service.ServiceProvider;
 
 public class Launcher extends ListActivity {
 	private static final String[][] gItems = {
 			{ "便携式Wifi热点设置", "com.android.settings",
 					"com.android.settings.wifi.WifiApSettings" },
 			{ "紧急呼叫", "com.android.phone", "com.android.phone.EmergencyDialer" },
-			{ "密码管理", "com.yypie", "com.yypie.Manager" } };
-	private WatchDog mMyService;
-	private ServiceConnection mConn = new ServiceConnection() {
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			mMyService = ((WatchDog.WatchDogBinder) service).getService();
-		}
+			// TODO: test
+			{ "测试-打电话", "com.android.contacts",
+					"com.android.contacts.DialtactsActivity" },
+			{ "密码管理", "com.yypie.ddesktop", "com.yypie.ddesktop.desktop.Manager" },
+			{ "完全退出", null, null } };
 
-		public void onServiceDisconnected(ComponentName name) {
-			mMyService = null;
-		}
-	};
+	private static final int lastExit = (gItems.length - 1);
 
 	/** Called when the activity is first created. */
 	@Override
@@ -42,7 +36,7 @@ public class Launcher extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		initListAdapter();
-		this.startService(new Intent(this, WatchDog.class));
+		ServiceProvider.StartMe(this);
 	}
 
 	@Override
@@ -63,17 +57,34 @@ public class Launcher extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Intent intent = new Intent();
-		intent.setClassName(gItems[position][1], gItems[position][2]);
-		startActivityForResult(intent, 1);
+		if (position == lastExit) {
+			new AlertDialog.Builder(this).setTitle("Message Box").setMessage(
+					"Sure to exit?").setNegativeButton("No",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+						}
+					}).setPositiveButton("Yes",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,
+								int whichButton) {
+							finish();
+							ServiceProvider.StopMe(Launcher.this);
+							android.os.Process.killProcess(android.os.Process
+									.myPid());
+						}
+					}).show();
+		} else {
+			Intent intent = new Intent();
+			intent.setClassName(gItems[position][1], gItems[position][2]);
+			startActivityForResult(intent, 1);
+		}
+
 		super.onListItemClick(l, v, position, id);
 	}
 
 	protected void clearAll() {
 		NotificationManager notiManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		notiManager.cancelAll();
-		// ActivityManager am = (ActivityManager)
-		// getSystemService(ACTIVITY_SERVICE);
 	}
 
 	@Override
@@ -85,22 +96,7 @@ public class Launcher extends ListActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-			new AlertDialog.Builder(this).setTitle("Message Box").setMessage(
-					"Sure to exit?").setNegativeButton("No",
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-						}
-					}).setPositiveButton("Yes",
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog,
-								int whichButton) {
-							finish();
-							Launcher.this.stopService(new Intent(Launcher.this,
-									WatchDog.class));
-							android.os.Process.killProcess(android.os.Process
-									.myPid());
-						}
-					}).show();
+			// Block back
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);

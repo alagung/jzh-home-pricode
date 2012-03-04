@@ -1,4 +1,4 @@
-package com.yypie;
+package com.yypie.ddesktop.receiver;
 
 import java.lang.reflect.Method;
 
@@ -14,13 +14,13 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
 import com.android.internal.telephony.ITelephony;
+import com.yypie.ddesktop.service.ServiceProvider;
 
 public class PhoneStatReceiver extends BroadcastReceiver {
 
 	TelephonyManager tm = null;
 	ITelephony iTelephony = null;
 	Context context = null;
-	private WatchDog mMyService;
 	
 	public class PhoneStateListenerEnd extends PhoneStateListener {
 		@Override
@@ -43,16 +43,6 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 	};
 	
 	PhoneStateListener listener = new PhoneStateListenerEnd();
-		
-	private ServiceConnection mConn = new ServiceConnection() {
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			mMyService = ((WatchDog.WatchDogBinder) service).getService();
-		}
-
-		public void onServiceDisconnected(ComponentName name) {
-			mMyService = null;
-		}
-	};
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -123,22 +113,4 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 			return false;
 		return true;
 	}	
-	private void setCurrentNumber(String number) {
-		if (context == null)
-			return;
-		context.bindService(new Intent(context, WatchDog.class), mConn,
-				0);
-		mMyService.setCurrentNumber(number);
-		context.unbindService(mConn);
-	}
-	private String getCurrentNumber()
-	{
-		if (context == null)
-			return null;
-		context.bindService(new Intent(context, WatchDog.class), mConn,
-				0);
-		String number = mMyService.getCurrentNumber();
-		context.unbindService(mConn);
-		return number;
-	}
 }
