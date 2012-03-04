@@ -33,12 +33,19 @@
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</service>
-		<!-- <receiver android:name=".receiver.PhoneStatReceiver">
-			<intent-filter android:priority="1000">
-				<action android:name="android.intent.action.PHONE_STATE" />
-				<action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+		<receiver android:name=".receiver.BootReceiver">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED">
+				</action>
 			</intent-filter>
-		</receiver> -->
+		</receiver>
+		<!--
+			<receiver android:name=".receiver.PhoneStatReceiver"> <intent-filter
+			android:priority="1000"> <action
+			android:name="android.intent.action.PHONE_STATE" /> <action
+			android:name="android.intent.action.NEW_OUTGOING_CALL" />
+			</intent-filter> </receiver>
+		-->
 	</application>
 	<uses-permission android:name="android.permission.SET_WALLPAPER" />
 	<uses-permission android:name="android.permission.SET_WALLPAPER_HINTS" />
