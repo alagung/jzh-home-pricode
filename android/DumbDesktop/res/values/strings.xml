@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">DumbDesktop</string>
     <string name="manager">密码管理器</string>
+    <string name="password">请输入密码</string>
 </resources>
