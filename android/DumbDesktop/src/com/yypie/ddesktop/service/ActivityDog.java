@@ -42,19 +42,15 @@ public class ActivityDog extends Thread {
 		needPassword = new HashSet<String>();
 		allows = new HashSet<String>();
 
-		needPassword
-				.add("com.android.settings/com.android.settings.wifi.WifiApSettings");
+		needPassword.add("com.android.settings/com.android.settings.wifi.WifiApSettings");
 		allows.add("com.android.phone/com.android.phone.EmergencyDialer");
-		allows
-				.add("com.android.phone/com.android.phone.EmergencyCallbackModeExitDialog");
+		allows.add("com.android.phone/com.android.phone.EmergencyCallbackModeExitDialog");
 		allows.add("com.android.phone/com.android.phone.EmergencyCallHandler");
 		allows.add("com.android.phone/com.android.phone.InCallScreen");
-		allows
-				.add("com.android.phone/com.android.phone.PrivilegedOutgoingCallBroadcaster");
+		allows.add("com.android.phone/com.android.phone.PrivilegedOutgoingCallBroadcaster");
 
 		// TODO: test
-		allows
-				.add("com.android.contacts/com.android.contacts.DialtactsActivity");
+		allows.add("com.android.contacts/com.android.contacts.DialtactsActivity");
 
 		credential = new ConcurrentHashMap<String, Long>();
 		credential.clear();
