@@ -41,6 +41,7 @@ public class ServiceProvider extends Service {
 	ActivityDog ad = null;
 	PhoneDog pd = null;
 	WifiDog wd = null;
+	WifiAPDog wad = null;
 	
 	public ActivityManager activityManager;
 	public TelephonyManager telephonyManager;
@@ -72,6 +73,9 @@ public class ServiceProvider extends Service {
 		wd = new WifiDog(this);
 		wd.startDog();
 		
+		wad = new WifiAPDog(this);
+		wad.startDog();
+		
 		ad = new ActivityDog(this, activityManager);
 		ad.startDog();
 		super.onCreate();
@@ -82,6 +86,8 @@ public class ServiceProvider extends Service {
 		pd = null;
 		wd.stopDog();
 		wd = null;
+		wad.stopDog();
+		wad = null;
 		ad.stopDog();
 		ad = null;
 		android.os.Process.killProcess(android.os.Process.myPid());
