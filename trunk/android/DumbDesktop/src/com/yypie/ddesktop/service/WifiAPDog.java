@@ -4,25 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningAppProcessInfo;
-import android.app.ActivityManager.RunningTaskInfo;
-import android.content.Intent;
 import android.util.Log;
-
-import com.yypie.ddesktop.desktop.Launcher;
-import com.yypie.ddesktop.desktop.LockDog;
 
 public class WifiAPDog extends Thread {
 
 	ServiceProvider provider;
-	Runtime runtime;
 	Process mLogCat;
 	BufferedReader mLogReader;
 	
@@ -31,12 +18,39 @@ public class WifiAPDog extends Thread {
 	public WifiAPDog(ServiceProvider provider) {
 		super();
 		this.provider = provider;
-		this.runtime = Runtime.getRuntime();
 	}
 
 	public void startDog() {
+		running = true;
+		this.start();
+	}
+
+	public void stopDog() {
+		// Close the process first
+		if (mLogCat != null)
+			mLogCat.destroy();
+		
+		// Clear reader
+		if (mLogReader != null) {
+			try {
+				mLogReader.close();
+			} catch (IOException e) {
+				Log.e(ServiceProvider.TAG, "Throw: " + Log.getStackTraceString(e));
+			}
+		}
+		
+		this.interrupt();		
+		running = false;
+	}
+	
+	@Override
+	public void run() {
 		try {
+			Log.e(ServiceProvider.TAG, "WifiAPDog started");
+			
+			Runtime runtime = Runtime.getRuntime();
 			mLogCat = runtime.exec("logcat -c");
+			mLogCat.waitFor();			
 			mLogCat = runtime.exec("logcat -v raw dnsmasq:I *:S");
 			if (mLogCat != null) {
 				InputStream is = null;
@@ -45,41 +59,24 @@ public class WifiAPDog extends Thread {
 				is = mLogCat.getInputStream();
 				isr = new InputStreamReader(is);
 				mLogReader = new BufferedReader(isr, 0x400);
-
-				Log.e(ServiceProvider.TAG, "WifiAPDog started");
-				running = true;
-				this.start();
 			}
-		} catch (IOException e) {
+			
+			if (mLogCat == null || mLogReader == null)
+			{
+				// Not started
+				running = false;
+			}
+			
+			String line = mLogReader.readLine();			
+			while (running && line != null) {
+				if (line.startsWith("DHCP"))
+					Log.e(ServiceProvider.TAG, line);
+				line = mLogReader.readLine();
+			}
+		} catch (Exception e) {
 			Log.e(ServiceProvider.TAG, "Throw: " + Log.getStackTraceString(e));
 		}
-	}
 
-	public void stopDog() {
-		if (mLogReader != null) {
-			try {
-				mLogReader.close();
-				mLogCat.destroy();
-			} catch (IOException e) {
-				Log.e(ServiceProvider.TAG, "Throw: " + Log.getStackTraceString(e));
-			}
-		}
-		this.interrupt();		
-		running = false;
-	}
-	
-	@Override
-	public void run() {
-		while (running) {
-			try {
-				String line = mLogReader.readLine();
-				//if (!line.startsWith("DHCP"))					continue;
-				if (line != null)
-					Log.e(ServiceProvider.TAG, line);
-			} catch (Exception e) {
-				Log.e(ServiceProvider.TAG, "Throw: " + Log.getStackTraceString(e));
-				break;
-			}
-		}
+		Log.e(ServiceProvider.TAG, "WifiAPDog stopped");
 	}
 }
