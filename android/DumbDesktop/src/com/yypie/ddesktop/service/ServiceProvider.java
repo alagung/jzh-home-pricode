@@ -12,6 +12,7 @@ import android.net.wifi.WifiManager;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import com.yypie.ddesktop.receiver.PhoneDog;
 import com.yypie.ddesktop.receiver.WifiDog;
@@ -82,14 +83,18 @@ public class ServiceProvider extends Service {
 	}
 
 	public void onDestroy() {
+		Log.e(TAG, "YYPIE Exiting...");
+		
+		ad.stopDog();
+		ad = null;
+		
 		pd.stopDog();
 		pd = null;
 		wd.stopDog();
 		wd = null;
+		
 		wad.stopDog();
 		wad = null;
-		ad.stopDog();
-		ad = null;
 		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
