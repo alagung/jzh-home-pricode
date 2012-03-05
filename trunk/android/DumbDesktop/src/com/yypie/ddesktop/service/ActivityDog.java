@@ -1,9 +1,13 @@
 package com.yypie.ddesktop.service;
 
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import android.app.ActivityManager;
+import android.app.ActivityManager.RunningAppProcessInfo;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.content.Intent;
 import android.util.Log;
@@ -14,6 +18,7 @@ import com.yypie.ddesktop.desktop.LockDog;
 public class ActivityDog extends Thread {
 
 	final static long termOfValidity = 60000; // 60s -> m second
+	final static long termOfClose = 5000; // Timeout of close package.
 
 	ServiceProvider provider;
 
@@ -24,6 +29,11 @@ public class ActivityDog extends Thread {
 	boolean running = false;
 
 	ConcurrentHashMap<String, Long> credential;
+	ConcurrentHashMap<String, Long> closing;
+	// Temp used when clean bg tasks
+	// It contains pkg names in closing but still running.
+	HashSet<String> runningApp;
+	
 	HashSet<String> needPassword;
 	HashSet<String> allows;
 
@@ -51,19 +61,22 @@ public class ActivityDog extends Thread {
 
 		// TODO: test
 		allows.add("com.android.contacts/com.android.contacts.DialtactsActivity");
+		allows.add("com.android.contacts/com.android.contacts.DialtactsSNSEntryActivity");
 
 		credential = new ConcurrentHashMap<String, Long>();
-		credential.clear();
+		closing = new ConcurrentHashMap<String, Long>();
+		runningApp = new HashSet<String>();
 	}
 
 	synchronized public void registCred(String fullname) {
 		if (fullname != null)
-			credential.put(fullname, System.currentTimeMillis());
+			credential.put(fullname, System.currentTimeMillis() + termOfValidity);
 	}
 
 	public void startDog() {
 		// every time renew the cred
 		credential.clear();
+		closing.clear();
 		running = true;
 		this.start();
 	}
@@ -77,10 +90,46 @@ public class ActivityDog extends Thread {
 		intent.putExtra(LockDog.arg1, activityName);
 		provider.startActivity(intent);
 	}
-
+	
+	private void closePackage(String packname) {
+		// Close current activity
+		// Before Android 2.2
+		// activityManager.restartPackage(packname);
+		Log.e(ServiceProvider.TAG, "Closing: " + packname);		
+		activityManager.killBackgroundProcesses(packname);
+	}
+		
+	private void closeBackGroundPackage(long now) {
+		runningApp.clear();
+		List<RunningAppProcessInfo> list = activityManager
+				.getRunningAppProcesses();
+		for (RunningAppProcessInfo info : list) {
+			for (String pkg : info.pkgList) {
+				if (closing.containsKey(pkg)) {
+					closePackage(pkg);
+					runningApp.add(pkg);
+				}
+			}
+		}
+		
+		// Removed closed or timeout pkg from closing
+		Iterator<Map.Entry<String, Long>> it = closing.entrySet().iterator();
+		while(it.hasNext())
+        {
+			Map.Entry<String, Long> entry = it.next();
+            if (!runningApp.contains(entry.getKey())) {
+            	// Delete already closed
+            	it.remove();
+            	Log.e(ServiceProvider.TAG, "Closed: " + entry.getKey());	
+            } else if (now > entry.getValue().longValue()) {
+            	// Timeout, remove
+            	it.remove();
+            	Log.e(ServiceProvider.TAG, "Time out: " + entry.getKey());	
+            }    
+        }
+	}
+	
 	private void backToDesktop() {
-		// Restart it
-		// activityManager.restartPackage(intentDesk.getPackage());
 		provider.startActivity(intentDesk);
 	}
 
@@ -124,8 +173,8 @@ public class ActivityDog extends Thread {
 				if (needPassword.contains(full)) {
 					allow = true;
 					if (credential.containsKey(full)) {
-						long ex = credential.get(full).longValue();
-						if ((timestamp - ex) < termOfValidity) {
+						if (timestamp < credential.get(full).longValue()) {
+							// Not expired.
 							skip = true;
 						} else {
 							credential.remove(full);
@@ -136,9 +185,12 @@ public class ActivityDog extends Thread {
 				if (!allow) {
 					Log.e(ServiceProvider.TAG, "Blocked: " + full);
 					backToDesktop();
+					closing.put(packname, timestamp + termOfClose);
 				} else if (!skip) {
 					startLockDog(full);
-				} else {
+				} else if (isMyPackage(packname)) {
+					// Clear background denied processes
+					closeBackGroundPackage(timestamp);
 				}
 
 				Thread.sleep(500);
