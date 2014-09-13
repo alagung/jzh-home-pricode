@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="label">切换虚拟按键</string>
+    <string name="open">打开虚拟按键</string>
+    <string name="close">关闭虚拟按键</string>
+    <string name="notice">更改已经完成，重启设备后生效</string>
+    <string name="fail">更改失败。请检查设备是否具有root权限</string>
+    <string name="fatal">无法读取系统信息。请检查是否android4.x版本</string>
+    
+</resources>
