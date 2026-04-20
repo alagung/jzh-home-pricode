@@ -1,10 +1,45 @@
-```markdown
-# Documentation files are source content - no need to ignore
-# Only preserving existing rules if any were present
-# Since only documentation markdown files were added/modified,
-# and no build artifacts, dependencies, or temp files exist in the change list,
-# no additional ignore rules are needed.
+```
+# Logs and temp files
+*.log
+*.tmp
+*.swp
 
-# The changes consist only of documentation files (.md) which should be tracked
-# Therefore, keeping .gitignore minimal or empty as appropriate
+# Environment
+.env
+.env.local
+.env.*
+
+# Editors
+.vscode/
+.idea/
+
+# Dependencies
+node_modules/
+venv/
+.venv/
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+
+# Build artifacts
+dist/
+build/
+target/
+
+# Python
+*.pyc
+*.pyo
+*.pyd
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# Original rules preserved
+*.log
 ```
