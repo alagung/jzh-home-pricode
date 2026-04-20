@@ -1,58 +1,62 @@
 ```
-# Android build artifacts
-*.class
-*.dex
-*.apk
-*.aar
-*.so
-*.jar
-gen/
-bin/
-build/
-.proguard/
-
-# Android IDE files
-.project
-.classpath
-.settings/
-.metadata/
-
-# Eclipse
-*.pydevproject
-.metadata
-bin/
-tmp/
-*.tmp
-*.bak
-*.swp
-*~.nib
-local.properties
-.settings/
-.loadpath
-
-# IntelliJ IDEA
-.idea/
-*.iml
-*.ipr
-*.iws
-out/
-
-# Gradle
-.gradle/
-build/
-
-# Local configuration file (sdk path, etc)
-local.properties
-
-# Log Files
+# Logs and temp files
 *.log
+*.tmp
+*.swp
 
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+# Environment
+.env
+.env.local
+.env.*
+
+# Editors
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git/modules/
+*.sublime-workspace
+.pytest_cache/
+.mypy_cache/
+.hypothesis/
+
+# Build and distribution artifacts
+dist/
+build/
+*.egg-info/
+.eggs/
+.installed.cfg
+lib/
+lib64/
+parts/
+sdist/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+.installed.cfg
+lib/
+lib64/
+parts/
+sdist/
+develop-eggs/
+.direnv/
 ```
