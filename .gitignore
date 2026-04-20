@@ -13,33 +13,50 @@
 .vscode/
 .idea/
 
-# Dependencies
-node_modules/
-venv/
-.venv/
-__pycache__/
-.mypy_cache/
-.pytest_cache/
-
-# Build artifacts
-dist/
-build/
-target/
-
 # Python
+__pycache__/
 *.pyc
 *.pyo
 *.pyd
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Coverage
-coverage/
-htmlcov/
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
 .coverage
-
-# Original rules preserved
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
 *.log
+.git/modules/
+*.sublime-workspace
+.pytest_cache/
+.mypy_cache/
+.hypothesis/
+
+# Build and distribution artifacts
+dist/
+build/
+*.egg-info/
+.eggs/
+.installed.cfg
+lib/
+lib64/
+parts/
+sdist/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+.installed.cfg
+lib/
+lib64/
+parts/
+sdist/
+develop-eggs/
+.direnv/
 ```
